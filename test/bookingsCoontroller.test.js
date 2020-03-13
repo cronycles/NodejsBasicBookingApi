@@ -3,9 +3,9 @@ import request from 'supertest';
 import { expect } from "chai"
 
 describe('BookingsController Test Suite', () => {
-  const INVALID_CLIENT_IDS = [null, undefined, 0];
-  INVALID_CLIENT_IDS.forEach(function (clientId) {
-    describe(`POST /bookings with invalid clientId (${clientId})`, () => {
+  const INVALID_CLIENT_IDS = [null, undefined, 0, -1];
+  INVALID_CLIENT_IDS.forEach((clientId) => {
+    describe(`POST /bookings with invalid or unregistered clientId (${clientId})`, () => {
       it('responds error with id 1 and "Invalid client id "text', (done) => {
         request(app)
           .post('/bookings')
@@ -22,4 +22,6 @@ describe('BookingsController Test Suite', () => {
       });
     });
   });
+
+  
 });

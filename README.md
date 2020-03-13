@@ -30,5 +30,6 @@ debería de salir un mensaje que dice: `running at port 3000`
 - la api la he hecho muy sencilla y sin auth
 - no me he perdido tanto dentro de la logica de la API, si no en como podría ser a nivel mas de arquitectura
 - no he usado una BBDD como Mongo, porqué no era necesario tenerla instalada para comprobar si se o no se hacer las cosas (como también dicen las instrucciones).
+- Para las reserva supongo ya de tener una base de datos con clientes registrados y, si el cliente no resulta registrado, no hago la reserva
 
 

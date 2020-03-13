@@ -1,4 +1,5 @@
 import express from "express";
+import BookingRoutes from './api/routes/BookingsRoutes';
 
 const app = express();
 import { json, urlencoded } from "body-parser";
@@ -9,6 +10,8 @@ const port = process.env.PORT || 3000;
 
 app.use(json());
 app.use(urlencoded({ extended: false }));
+
+new BookingRoutes(app); 
 
 //user friendly response for not found url
 app.use((req, res) => {

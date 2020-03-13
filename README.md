@@ -23,3 +23,12 @@ simplemente en la carpeta del proyecto abrír el terminal y ejecutar:
 npm start
 ```
 debería de salir un mensaje que dice: `running at port 3000`
+
+## Notas de desarrollo
+- he utilizado babel para transpilar el código y poder escribir mas facilmente en ES6
+- he utilizado la combinación mocha-supertest-chai que vienen muy bien para testear una API
+- la api la he hecho muy sencilla y sin auth
+- no me he perdido tanto dentro de la logica de la API, si no en como podría ser a nivel mas de arquitectura
+- no he usado una BBDD como Mongo, porqué no era necesario tenerla instalada para comprobar si se o no se hacer las cosas (como también dicen las instrucciones).
+
+

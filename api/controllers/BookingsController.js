@@ -1,8 +1,14 @@
-export default class BookingsController {
 
+
+export default class BookingsController {
+  #bookingService;
+
+  constructor(BookingService) {
+    this.#bookingService = BookingService;
+  }
   createABooking = (req, res) => {
     var booking = req.body;
-    if (!this.#isAValidClientId(booking.clientId)) {
+    if (!this.#bookingService.isAValidClientId(booking.clientId)) {
       res.status(200).json({
         error: {
           id: 1,
@@ -12,7 +18,5 @@ export default class BookingsController {
     } 
   };
 
-  #isAValidClientId(clientId) {
-    return clientId && clientId > 0
-  }
+ 
 }

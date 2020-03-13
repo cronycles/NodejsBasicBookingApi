@@ -31,5 +31,6 @@ debería de salir un mensaje que dice: `running at port 3000`
 - no me he perdido tanto dentro de la logica de la API, si no en como podría ser a nivel mas de arquitectura
 - no he usado una BBDD como Mongo, porqué no era necesario tenerla instalada para comprobar si se o no se hacer las cosas (como también dicen las instrucciones).
 - Para las reserva supongo ya de tener una base de datos con clientes registrados y, si el cliente no resulta registrado, no hago la reserva
-
+- el la reserva estoy considerando que la api solo es de UN ESPECIFICO SMART BUILDING. Eso no lo recomendaría, pero por esigencia de test no voy a enviar ningún id de building.
+- voy a tratar las fechas como si fueran del timezone current
 

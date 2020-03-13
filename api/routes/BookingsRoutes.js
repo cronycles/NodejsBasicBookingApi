@@ -1,12 +1,11 @@
 import BookingsController from '../controllers/BookingsController';
-import BookingService from '../../Services/BookingService'
+
 
 export default class BookingsRoutes {
   #bookingsController;
 
   constructor(app) {
-    const bookingService = new BookingService();
-    this.#bookingsController = new BookingsController(bookingService);
+    this.#bookingsController = new BookingsController();
     this.defineBookingsRoutes(app);
   }
 

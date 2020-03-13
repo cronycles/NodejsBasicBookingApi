@@ -1,9 +1,9 @@
-
+import BookingService from '../../Services/BookingService'
 
 export default class BookingsController {
   #bookingService;
 
-  constructor(BookingService) {
+  constructor() {
     this.#bookingService = BookingService;
   }
   createABooking = (req, res) => {

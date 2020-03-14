@@ -83,14 +83,19 @@ export default class BookingsController {
           break;
         case SERVICE_BOOKING_ERRORS.INVALID_CLIENT_ID:
         case SERVICE_BOOKING_ERRORS.CLIENT_NOT_FOUND:
-          outcome.data.error.id = serviceError;
+          outcome.data.error.id = CLIENT_BOOKING_ERRORS.INVALID_CLIENT_ID;
           outcome.data.error.message = "Invalid client id"
           break;
         case SERVICE_BOOKING_ERRORS.INVALID_DATES:
-          outcome.data.error.id = serviceError;
+          outcome.data.error.id = CLIENT_BOOKING_ERRORS.INVALID_DATES;
           outcome.data.error.message = "Invalid dates"
           break;
+          case SERVICE_BOOKING_ERRORS.BOOKINGS_FOUND:
+            outcome.data.error.id = CLIENT_BOOKING_ERRORS.BOOKINGS_FOUND;
+            outcome.data.error.message = "Invalid dates"
+            break;
         default:
+          outcome.data.error.id = CLIENT_BOOKING_ERRORS.UNKNOWN;
           outcome.data.error.message = "Unknown error"
           break;
       }

@@ -39,4 +39,4 @@ debería de salir un mensaje que dice: `running at port 3000`
 - se espera exportar entidades como el BookingErrorsConstants
 - si no hay un body con los inputs requeridos se envía un bad request, es el único caso, si no siempre 200
 - me espero unas fechas yyyy-mm-dd o yyyy/mm/dd
-- 
+- habría que considerar una transación para las reglas de negocio porqué podría ocurrir que mientras se comprueban los datos haya alguien que toque la bbdd

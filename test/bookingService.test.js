@@ -135,4 +135,46 @@ describe('BookingsService Test Suite', () => {
         });
     });
 
+    describe('the client already has booking into the building', () => {
+        let fakeBookingRepository;
+        let bookingService;
+        beforeEach(() => {
+            fakeBookingRepository = new BookingRepository(fakeBookingRepository);
+            bookingService = new BookingService(fakeBookingRepository);
+        });
+
+        it('always returns bookings found error', (done) => {
+            const inputEntity = { clientId: 1, dateFrom: "3050-01-01", dateTo: "3050-01-02" };
+            sinon.stub(fakeBookingRepository, 'getClientById').returns(1);
+            sinon.stub(fakeBookingRepository, 'getClientBookingsByDates').returns(["booking"]);
+
+            const bookingServiceCreateBookingOutcome = bookingService.createBooking(inputEntity);
+            expect(bookingServiceCreateBookingOutcome).not.null;
+            expect(bookingServiceCreateBookingOutcome).not.null;
+            expect(bookingServiceCreateBookingOutcome.booking).is.null;
+            expect(bookingServiceCreateBookingOutcome.error).is.equal(BOOKING_SERVICE_CONSTANTS.BOOKINGS_FOUND);
+            done();
+        });
+    });
+
+    describe('createBooking() with everything ok', () => {
+        let fakeBookingRepository;
+        let bookingService;
+        beforeEach(() => {
+            fakeBookingRepository = new BookingRepository(fakeBookingRepository);
+            bookingService = new BookingService(fakeBookingRepository);
+        });
+
+        it('it always creates calls bookingRepository.createBooking() function ', (done) => {
+            const inputEntity = { clientId: 1, dateFrom: "3050-01-01", dateTo: "3050-01-02" };
+            sinon.stub(fakeBookingRepository, 'getClientById').returns(1);
+            sinon.stub(fakeBookingRepository, 'getClientBookingsByDates').returns(null);
+            sinon.stub(fakeBookingRepository, 'createBooking').resolves();
+
+            bookingService.createBooking(inputEntity);
+            sinon.assert.calledOnce(fakeBookingRepository.createBooking);
+            done();
+        });
+    });
+
 });

@@ -3,5 +3,6 @@ export default {
     INVALID_INPUTS: 1,
     INVALID_CLIENT_ID: 2,
     CLIENT_NOT_FOUND: 3,
-    INVALID_DATES: 4
+    INVALID_DATES: 4,
+    BOOKINGS_FOUND: 5
 }

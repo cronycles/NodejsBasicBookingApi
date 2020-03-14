@@ -6,4 +6,12 @@ export default class BookingRepository {
     getClientById = (clientId) => {
         
     } 
+
+    getClientBookingsByDates = (clientId, dateFrom, dateTo) => {
+
+    }
+
+    createBooking = (clientId, dateFrom, dateTo) => {
+
+    }
 }

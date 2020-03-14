@@ -32,7 +32,22 @@ export default class BookingRepository {
         if (clientBookings && clientBookings.length > 0) {
             for (let clientBooking of clientBookings) {
                 if (dateFrom >= clientBooking.dateFrom && dateTo <= clientBooking.dateTo) {
-                    outcome.push(booking);
+                    outcome.push(clientBooking);
+                    break;
+                }
+            }
+        }
+        return outcome;
+    }
+
+    getClientTodayBooking = (clientId) => {
+        let outcome = null;
+        const clientBookings = this.#getClientBookings(clientId)
+        const today = new Date().setHours(0, 0, 0, 0);
+        if (clientBookings && clientBookings.length > 0) {
+            for (let clientBooking of clientBookings) {
+                if (clientBooking.dateFrom == today) {
+                    outcome = clientBooking;
                     break;
                 }
             }

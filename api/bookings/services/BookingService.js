@@ -1,15 +1,17 @@
 import CreateBookingResponseEntity from "./entities/CreateBookingResponseEntity";
+import CheckinResponseEntity from "./entities/CheckinResponseEntity";
 import SERVICE_ERRORS from "./entities/BookingServiceErrorsConstants";
 export default class BookingService {
     #bookingRepository;
+    #controlAccessService;
 
-    constructor(bookingRepository) {
+    constructor(bookingRepository, controlAccessService) {
         this.#bookingRepository = bookingRepository;
+        this.#controlAccessService = controlAccessService;
     }
 
     createBooking = (createBookingRequestEntity) => {
         try {
-            let outcome = null;
             if (!createBookingRequestEntity) {
                 return new CreateBookingResponseEntity(null, SERVICE_ERRORS.INVALID_INPUTS);
             }
@@ -26,6 +28,24 @@ export default class BookingService {
             return null;
         }
     }
+    checkin = (checkinRequestEntity) => {
+        try {
+            if (!checkinRequestEntity) {
+                return new CheckinResponseEntity(null, SERVICE_ERRORS.INVALID_INPUTS);
+            }
+            if (!this.#isAValidClientId(checkinRequestEntity.clientId)) {
+                return new CheckinResponseEntity(null, SERVICE_ERRORS.INVALID_CLIENT_ID);
+            }
+            
+            return this.#performCheckin(checkinRequestEntity);
+
+        } catch (e) {
+            console.log(e);
+            return null;
+        }
+    }
+
+
 
     #isAValidClientId = (clientId) => {
         return clientId && clientId > 0
@@ -71,6 +91,23 @@ export default class BookingService {
             return new CreateBookingResponseEntity(createdBooking, null);
         }
         return new CreateBookingResponseEntity(null, SERVICE_ERRORS.UNKNOWN);
+    }
+
+    #performCheckin = (checkinRequestEntity) => {
+        const clientId = this.#bookingRepository.getClientById(checkinRequestEntity.clientId);
+        if (!clientId) {
+            return new CheckinResponseEntity(null, SERVICE_ERRORS.CLIENT_NOT_FOUND);
+        }
+        console.log("idefsafsdasdsdasd");
+        const clientBooking = this.#bookingRepository.getClientTodayBooking(checkinRequestEntity.clientId);
+        if(!clientBooking) {
+            return new CheckinResponseEntity(null, SERVICE_ERRORS.INVALID_CHECKIN);
+        }
+        const accessCode = this.#controlAccessService.getAccessCode();
+        if(accessCode) {
+            return new CheckinResponseEntity(accessCode, null);
+        }
+        return new CheckinResponseEntity(null, SERVICE_ERRORS.UNKNOWN); 
     }
 
     

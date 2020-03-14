@@ -9,6 +9,7 @@ let assert = chai.assert;
 let should = chai.should();
 let expect = chai.expect;
 
+import ControlAccessService from "../api/bookings/services/ControlAccessService";
 import BookingRepository from "../api/bookings/repositories/BookingRepository";
 import BookingService from '../api/bookings/services/BookingService'
 import BOOKING_SERVICE_CONSTANTS from '../api/bookings/services/entities/BookingServiceErrorsConstants'
@@ -173,6 +174,68 @@ describe('BookingsService Test Suite', () => {
 
             bookingService.createBooking(inputEntity);
             sinon.assert.calledOnce(fakeBookingRepository.createBooking);
+            done();
+        });
+    });
+
+    describe('checkin() with unknown clientId', () => {
+        let fakeBookingRepository;
+        let bookingService;
+        beforeEach(() => {
+            fakeBookingRepository = new BookingRepository(fakeBookingRepository);
+            bookingService = new BookingService(fakeBookingRepository);
+        });
+
+        it('it always returns a client not found error', (done) => {
+            const inputEntity = { clientId: 1 };
+            sinon.stub(fakeBookingRepository, 'getClientById').returns(null);
+        
+            const bookingServiceCheckinOutcome = bookingService.checkin(inputEntity);
+            expect(bookingServiceCheckinOutcome).not.null;
+            expect(bookingServiceCheckinOutcome).not.null;
+            expect(bookingServiceCheckinOutcome.accessCode).is.null;
+            expect(bookingServiceCheckinOutcome.error).is.equal(BOOKING_SERVICE_CONSTANTS.CLIENT_NOT_FOUND);
+            done();
+        });
+    });
+
+    describe('checkin() with valid clientId', () => {
+        let fakeBookingRepository;
+        let bookingService;
+        beforeEach(() => {
+            fakeBookingRepository = new BookingRepository(fakeBookingRepository);
+            bookingService = new BookingService(fakeBookingRepository);
+        });
+
+        it('it always calls a BookingRepository.getClientTodayBooking', (done) => {
+            const inputEntity = { clientId: 1 };
+            sinon.stub(fakeBookingRepository, 'getClientById').returns(1);
+            sinon.stub(fakeBookingRepository, 'getClientTodayBooking').returns({booking: "booking"});
+        
+            bookingService.checkin(inputEntity);
+            sinon.assert.calledOnce(fakeBookingRepository.getClientTodayBooking);
+            done();
+        });
+    });
+
+    describe('checkin() with valid clientId and existig booking', () => {
+        let fakeBookingRepository;
+        let fakeControlAccessService;
+        let bookingService;
+        beforeEach(() => {
+            fakeBookingRepository = new BookingRepository(fakeBookingRepository);
+            fakeControlAccessService = new ControlAccessService();
+            bookingService = new BookingService(fakeBookingRepository, fakeControlAccessService);
+        });
+
+        it('it always calls a ControleAccessService.getAccessCode', (done) => {
+            const inputEntity = { clientId: 1 };
+            sinon.stub(fakeBookingRepository, 'getClientById').returns(1);
+            sinon.stub(fakeBookingRepository, 'getClientTodayBooking').returns({booking: "booking"});
+            sinon.stub(fakeControlAccessService, 'getAccessCode').resolves();
+        
+            bookingService.checkin(inputEntity);
+            sinon.assert.calledOnce(fakeControlAccessService.getAccessCode);
             done();
         });
     });

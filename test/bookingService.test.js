@@ -77,7 +77,7 @@ describe('BookingsService Test Suite', () => {
     ];
     INVALID_DATES.forEach((inputEntity) => {
 
-        describe('the dates are invalid', () => {
+        describe('createBooking(inputEntity) the dates are invalid', () => {
             let bookingService;
             beforeEach(() => {
                 bookingService = new BookingService(new BookingRepository());
@@ -92,6 +92,25 @@ describe('BookingsService Test Suite', () => {
                 expect(bookingServiceCreateBookingOutcome.error).is.equal(BOOKING_SERVICE_CONSTANTS.INVALID_DATES);
                 done();
             });
+        });
+    });
+
+    describe('createBooking(inputEntity) with valid inputs', () => {
+        let fakeBookingRepository;
+        let bookingService;
+        beforeEach(() => {
+            fakeBookingRepository = new BookingRepository(fakeBookingRepository);
+            bookingService = new BookingService(fakeBookingRepository);
+        });
+
+        it('always calls bookingRepository.getClientById() function', (done) => {
+            const inputEntity = { clientId: 1, dateFrom: "3050-01-01", dateTo: "3050-01-02" };
+            sinon.stub(fakeBookingRepository, 'getClientById').returns(null);
+
+            const bookingServiceCreateBookingOutcome = bookingService.createBooking(inputEntity);
+            expect(bookingServiceCreateBookingOutcome).to.be.an.instanceOf(CreateBookingResponseEntity);
+            sinon.assert.calledOnce(fakeBookingRepository.getClientById);
+            done();
         });
     });
 
@@ -110,8 +129,6 @@ describe('BookingsService Test Suite', () => {
             const bookingServiceCreateBookingOutcome = bookingService.createBooking(inputEntity);
             expect(bookingServiceCreateBookingOutcome).not.null;
             expect(bookingServiceCreateBookingOutcome).not.null;
-            expect(bookingServiceCreateBookingOutcome).to.be.an.instanceOf(CreateBookingResponseEntity);
-            sinon.assert.calledOnce(fakeBookingRepository.getClientById);
             expect(bookingServiceCreateBookingOutcome.booking).is.null;
             expect(bookingServiceCreateBookingOutcome.error).is.equal(BOOKING_SERVICE_CONSTANTS.CLIENT_NOT_FOUND);
             done();

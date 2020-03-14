@@ -40,6 +40,21 @@ export default class BookingRepository {
         return outcome;
     }
 
+    getClientCheckedInBooking = (clientId) => {
+        let outcome = null;
+        const clientBookings = this.#getClientBookings(clientId)
+
+        if (clientBookings && clientBookings.length > 0) {
+            for (let clientBooking of clientBookings) {
+                if (clientBooking.checkin) {
+                    outcome = clientBooking;
+                    break;
+                }
+            }
+        }
+        return outcome;
+    }
+
     getClientTodayBooking = (clientId) => {
         let outcome = null;
         const clientBookings = this.#getClientBookings(clientId)
@@ -59,6 +74,11 @@ export default class BookingRepository {
         const booking = {client: clientId, dateFrom: dateFrom, dateTo: dateTo};
         this.#validBookings.push(booking);
         return booking;
+    }
+
+    checkout = (clientId, bookingId) => {
+        //checkout performing
+        return true;
     }
 
     #getClientBookings(clientId) {

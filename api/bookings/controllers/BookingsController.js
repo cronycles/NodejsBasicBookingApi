@@ -45,12 +45,45 @@ export default class BookingsController {
     }
   };
 
+  checkout = (req, res) => {
+    try {
+      var checkout = req.body;
+      if (this.#isAValidCheckoutRequest(checkout)) {
+        let checkInResponseEntity = this.#bookingService.checkout(checkout.clientId);
+
+        const objectResponse = this.#createObjectResponseForCheckout(checkInResponseEntity);
+        res.status(objectResponse.status).json(objectResponse.data);
+      }
+      else {
+        res.status(400).json(null);
+      }
+    } catch (e) {
+      console.log(e);
+      res.status(500).json(null);
+    }
+  };
+
   #isAValidCheckinRequest(checkin) {
     try {
       let outcome = false;
       if (checkin != null
         && checkin != {}
         && checkin.clientId) {
+        outcome = true;
+      }
+      return outcome;
+    } catch (e) {
+      console.log(e);
+      return false;
+    }
+  }
+
+  #isAValidCheckoutRequest(checkout) {
+    try {
+      let outcome = false;
+      if (checkout != null
+        && checkout != {}
+        && checkout.clientId) {
         outcome = true;
       }
       return outcome;
@@ -131,6 +164,31 @@ export default class BookingsController {
     }
   }
 
+  #createObjectResponseForCheckout(checkoutResponseEntity) {
+    try {
+      let outcome = {}
+
+      if (checkoutResponseEntity) {
+        if (checkoutResponseEntity.error) {
+          outcome = this.#createErrorResponseFromServiceError(checkoutResponseEntity.error);
+        }
+        else {
+          outcome = {
+            status: 200,
+            data: {}
+          }
+        }
+      }
+      return outcome;
+
+    } catch (e) {
+      console.log(e);
+      return {
+        status: 500
+      }
+    }
+  }
+
   #createErrorResponseFromServiceError(serviceError) {
     let outcome = {
       status: 200,
@@ -160,10 +218,14 @@ export default class BookingsController {
           outcome.data.error.id = CLIENT_BOOKING_ERRORS.BOOKINGS_FOUND;
           outcome.data.error.message = "you already have a booking between these days"
           break;
-          case SERVICE_BOOKING_ERRORS.INVALID_CHECKIN:
-            outcome.data.error.id = CLIENT_BOOKING_ERRORS.INVALID_CHECKIN;
-            outcome.data.error.message = "checkin error"
-            break;
+        case SERVICE_BOOKING_ERRORS.INVALID_CHECKIN:
+          outcome.data.error.id = CLIENT_BOOKING_ERRORS.INVALID_CHECKIN;
+          outcome.data.error.message = "checkin error"
+          break;
+        case SERVICE_BOOKING_ERRORS.INVALID_CHECKOUT:
+          outcome.data.error.id = CLIENT_BOOKING_ERRORS.INVALID_CHECKOUT;
+          outcome.data.error.message = "checkin error"
+          break;
         default:
           outcome.data.error.id = CLIENT_BOOKING_ERRORS.UNKNOWN;
           outcome.data.error.message = "Unknown error"

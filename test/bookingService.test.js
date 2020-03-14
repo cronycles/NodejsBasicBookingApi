@@ -240,4 +240,63 @@ describe('BookingsService Test Suite', () => {
         });
     });
 
+    describe('checkout() with unknown clientId', () => {
+        let fakeBookingRepository;
+        let bookingService;
+        beforeEach(() => {
+            fakeBookingRepository = new BookingRepository(fakeBookingRepository);
+            bookingService = new BookingService(fakeBookingRepository);
+        });
+
+        it('it always returns a client not found error', (done) => {
+            const inputEntity = { clientId: 1 };
+            sinon.stub(fakeBookingRepository, 'getClientById').returns(null);
+        
+            const bookingServiceCheckinOutcome = bookingService.checkout(inputEntity);
+            expect(bookingServiceCheckinOutcome).not.null;
+            expect(bookingServiceCheckinOutcome).not.null;
+            expect(bookingServiceCheckinOutcome.error).is.equal(BOOKING_SERVICE_CONSTANTS.CLIENT_NOT_FOUND);
+            done();
+        });
+    });
+
+    describe('checkout() with valid clientId', () => {
+        let fakeBookingRepository;
+        let bookingService;
+        beforeEach(() => {
+            fakeBookingRepository = new BookingRepository(fakeBookingRepository);
+            bookingService = new BookingService(fakeBookingRepository);
+        });
+
+        it('it always calls a BookingRepository.getClientCheckedInBooking', (done) => {
+            const inputEntity = { clientId: 1 };
+            sinon.stub(fakeBookingRepository, 'getClientById').returns(1);
+            sinon.stub(fakeBookingRepository, 'getClientCheckedInBooking').returns({booking: "booking"});
+        
+            bookingService.checkout(inputEntity);
+            sinon.assert.calledOnce(fakeBookingRepository.getClientCheckedInBooking);
+            done();
+        });
+    });
+
+    describe('checkout() with valid clientId and existig checkedIn booking', () => {
+        let fakeBookingRepository;
+        let bookingService;
+        beforeEach(() => {
+            fakeBookingRepository = new BookingRepository(fakeBookingRepository);
+            bookingService = new BookingService(fakeBookingRepository);
+        });
+
+        it('it always calls a BookingRepository.getAccessCode', (done) => {
+            const inputEntity = { clientId: 1 };
+            sinon.stub(fakeBookingRepository, 'getClientById').returns(1);
+            sinon.stub(fakeBookingRepository, 'getClientCheckedInBooking').returns({booking: "booking"});
+            sinon.stub(fakeBookingRepository, 'checkout').resolves();
+        
+            bookingService.checkout(inputEntity);
+            sinon.assert.calledOnce(fakeBookingRepository.checkout);
+            done();
+        });
+    });
+
 });

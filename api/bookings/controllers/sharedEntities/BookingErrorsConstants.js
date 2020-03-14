@@ -5,4 +5,5 @@ export default {
     INVALID_DATES: 3,
     BOOKINGS_FOUND: 4,
     INVALID_CHECKIN: 5,
+    INVALID_CHECKOUT: 6,
 }

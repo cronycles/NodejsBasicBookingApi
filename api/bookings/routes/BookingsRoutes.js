@@ -12,6 +12,9 @@ export default class BookingsRoutes {
 
     app.route('/checkin')
       .post(this.bookingsController.checkin);
+
+    app.route('/checkout')
+      .post(this.bookingsController.checkout);
   }
 
 }

@@ -2,15 +2,17 @@ import app from "../server.js";
 import request from 'supertest';
 import chai from 'chai';
 import spies from 'chai-spies';
+import sinon from 'sinon';
 
 chai.use(spies);
 let assert = chai.assert;
 let should = chai.should();
 let expect = chai.expect;
 
+import BookingRepository from "../api/bookings/repositories/BookingRepository";
 import BookingService from '../api/bookings/services/BookingService'
 import BOOKING_SERVICE_CONSTANTS from '../api/bookings/services/entities/BookingServiceErrorsConstants'
-import CreateBookingResponseEntity from "../api/bookings/services/entities/CreateBookingResponseEntity.js";
+import CreateBookingResponseEntity from "../api/bookings/services/entities/CreateBookingResponseEntity";
 
 describe('BookingsService Test Suite', () => {
     const INVALID_INPUTS = [
@@ -21,7 +23,7 @@ describe('BookingsService Test Suite', () => {
         describe('createBooking(InputEntity) with invalid InputEntity', () => {
             let bookingService;
             beforeEach(() => {
-                bookingService = new BookingService();
+                bookingService = new BookingService(new BookingRepository());
             });
 
             it('always returns an invalid inputs error', (done) => {
@@ -47,7 +49,7 @@ describe('BookingsService Test Suite', () => {
         describe('createBooking(InputEntity) with invalid clientId', () => {
             let bookingService;
             beforeEach(() => {
-                bookingService = new BookingService();
+                bookingService = new BookingService(new BookingRepository());
             });
 
             it('always returns an invalid client id error', (done) => {
@@ -78,7 +80,7 @@ describe('BookingsService Test Suite', () => {
         describe('the dates are invalid', () => {
             let bookingService;
             beforeEach(() => {
-                bookingService = new BookingService();
+                bookingService = new BookingService(new BookingRepository());
             });
 
             it('always returns an invalid dates error', (done) => {
@@ -92,4 +94,28 @@ describe('BookingsService Test Suite', () => {
             });
         });
     });
+
+    describe('the client does not exists into de DB', () => {
+        let fakeBookingRepository;
+        let bookingService;
+        beforeEach(() => {
+            fakeBookingRepository = new BookingRepository(fakeBookingRepository);
+            bookingService = new BookingService(fakeBookingRepository);
+        });
+
+        it('always returns a client not found error', (done) => {
+            const inputEntity = { clientId: 1, dateFrom: "3050-01-01", dateTo: "3050-01-02" };
+            sinon.stub(fakeBookingRepository, 'getClientById').returns(null);
+
+            const bookingServiceCreateBookingOutcome = bookingService.createBooking(inputEntity);
+            expect(bookingServiceCreateBookingOutcome).not.null;
+            expect(bookingServiceCreateBookingOutcome).not.null;
+            expect(bookingServiceCreateBookingOutcome).to.be.an.instanceOf(CreateBookingResponseEntity);
+            sinon.assert.calledOnce(fakeBookingRepository.getClientById);
+            expect(bookingServiceCreateBookingOutcome.booking).is.null;
+            expect(bookingServiceCreateBookingOutcome.error).is.equal(BOOKING_SERVICE_CONSTANTS.CLIENT_NOT_FOUND);
+            done();
+        });
+    });
+
 });

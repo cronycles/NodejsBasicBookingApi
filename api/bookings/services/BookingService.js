@@ -1,6 +1,11 @@
 import CreateBookingResponseEntity from "./entities/CreateBookingResponseEntity";
 import SERVICE_ERRORS from "./entities/BookingServiceErrorsConstants";
-export default class BookingService {
+export default class BookingService  {
+    #bookingRepository;
+
+    constructor(bookingRepository) {
+        this.#bookingRepository = bookingRepository;
+    }
 
     createBooking = (createBookingRequestEntity) => {
         try {
@@ -13,7 +18,7 @@ export default class BookingService {
                     outcome = new CreateBookingResponseEntity(null, SERVICE_ERRORS.INVALID_DATES);
                 }
                 else {
-
+                    outcome = this.#performBookingCreation(createBookingRequestEntity);
                 }
             } else {
                 outcome = new CreateBookingResponseEntity(null, SERVICE_ERRORS.INVALID_INPUTS);
@@ -32,7 +37,6 @@ export default class BookingService {
     #areValidDates = (dateFromString, dateToString) => {
         try {
             let outcome = false;
-            console.log(dateFromString);
             if (dateFromString && dateToString) {
 
                 const dateFrom = Date.parse(dateFromString);
@@ -50,5 +54,15 @@ export default class BookingService {
             console.log(e);
             return false;
         }
+    }
+    #performBookingCreation = (createBookingRequestEntity) => {
+        
+        let outcome = null;
+        let clientId = this.#bookingRepository.getClientById(createBookingRequestEntity.clientId);
+        if(!clientId) {
+            outcome = new CreateBookingResponseEntity(null, SERVICE_ERRORS.CLIENT_NOT_FOUND);
+        }
+
+        return outcome;
     }
 }

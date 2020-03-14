@@ -55,9 +55,7 @@ describe('BookingsController Test Suite', () => {
       });
 
       it('it never calls a createBooking service method', (done) => {
-        let fakeBookingRoutes = sinon.stub(boookingsRoutes).returns(fakeBookingRoutes);
         sinon.stub(fakeBookingService, 'createBooking').resolves();
-
         fakeBookingsController.createBooking(req, mockResponse());
         sinon.assert.notCalled(fakeBookingService.createBooking);
         done();

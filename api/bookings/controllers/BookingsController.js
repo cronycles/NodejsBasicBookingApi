@@ -14,7 +14,7 @@ export default class BookingsController {
       let bookingServiceRequestEntity = new CreateBookingRequestEntity(booking.clientId, booking.dateFrom, booking.dateTo);
       let bookingServiceResponseEntity = this.#bookingService.createBooking(bookingServiceRequestEntity);
       const objectResponse = this.#createObjectResponseForCreatedBooking(bookingServiceResponseEntity);
-      res.status(objectResponse.status).json(objectResponse.body);
+      res.status(objectResponse.status).json(objectResponse.data);
     }
     else {
       res.status(400).json(null);
@@ -25,12 +25,11 @@ export default class BookingsController {
     try {
       let outcome = false;
       if (booking != null
-        && booking != {}
-        && booking.clientId
-        && booking.dateFrom
-        && booking.dateTo) {
-        outcome = true;
-      }
+        && booking.clientId != null
+        && booking.dateFrom != null
+        && booking.dateTo != null) {
+          outcome = true;
+        }
       return outcome;
     } catch (e) {
       console.log(e);
@@ -50,12 +49,11 @@ export default class BookingsController {
           outcome = {
             status: 200,
             data: {
-              booking:  bookingServiceResponseEntity.booking
-            } 
+              booking: bookingServiceResponseEntity.booking
+            }
           }
         }
       }
-
       return outcome;
 
     } catch (e) {
@@ -66,28 +64,29 @@ export default class BookingsController {
     }
   }
 
-  #createErrorResponseFromServiceError(serviceErrorEntity) {
+  #createErrorResponseFromServiceError(serviceError) {
     let outcome = {
       status: 200,
       data: {
-        error: {
+        error: {
           id: CLIENT_BOOKING_ERRORS.UNKNOWN,
           message: "Unknown error"
-        } 
+        }
       }
     }
-    if (serviceErrorEntity.id) {
-      
-      switch (serviceErrorEntity.id) {
+    if (serviceError) {
+
+      switch (serviceError) {
         case SERVICE_BOOKING_ERRORS.INVALID_INPUTS:
           outcome.status = 400
           break;
         case SERVICE_BOOKING_ERRORS.INVALID_CLIENT_ID:
-          outcome.data.error.id = serviceErrorEntity.id;
+        case SERVICE_BOOKING_ERRORS.CLIENT_NOT_FOUND:
+          outcome.data.error.id = serviceError;
           outcome.data.error.message = "Invalid client id"
           break;
         case SERVICE_BOOKING_ERRORS.INVALID_DATES:
-          outcome.data.error.id = serviceErrorEntity.id;
+          outcome.data.error.id = serviceError;
           outcome.data.error.message = "Invalid dates"
           break;
         default:
@@ -95,7 +94,6 @@ export default class BookingsController {
           break;
       }
     }
-
     return outcome;
   }
 

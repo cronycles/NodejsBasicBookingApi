@@ -65,7 +65,7 @@ describe('BookingsController Test Suite', () => {
     });
   });
 
-  describe('POST /bookings with valid body', () => {
+  describe('createBooking() with valid body', () => {
     let fakeBookingService = new BookingService();
     let bookingsController;
     let req = { body: { clientId: 1, dateFrom: "something", dateTo: "something" } };

@@ -1,5 +1,6 @@
 import CLIENT_BOOKING_ERRORS from './sharedEntities/BookingErrorsConstants';
-import SERVICE_BOOKING_ERRORS from '../services/entities/BookingServiceConstants';
+import SERVICE_BOOKING_ERRORS from '../services/entities/BookingServiceErrorsConstants';
+import CreateBookingRequestEntity from '../services/entities/CreateBookingRequestEntity';
 
 export default class BookingsController {
   #bookingService;
@@ -9,13 +10,14 @@ export default class BookingsController {
   }
   createBooking = (req, res) => {
     var booking = req.body;
-    if (!this.#isAValidBookingRequest(booking)) {
-      res.status(400).json(null);
-    }
-    else {
-      let bookingServiceResponseEntity = this.#bookingService.createBooking(booking);
+    if (this.#isAValidBookingRequest(booking)) {
+      let bookingServiceRequestEntity = new CreateBookingRequestEntity(booking.clientId, booking.dateFrom, booking.dateTo);
+      let bookingServiceResponseEntity = this.#bookingService.createBooking(bookingServiceRequestEntity);
       const objectResponse = this.#createObjectResponseForCreatedBooking(bookingServiceResponseEntity);
       res.status(objectResponse.status).json(objectResponse.body);
+    }
+    else {
+      res.status(400).json(null);
     }
   };
 

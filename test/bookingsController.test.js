@@ -81,4 +81,20 @@ describe('BookingsController Test Suite', () => {
     });
   });
 
+  describe('POST /checkin with invalid client id', () => {
+    it('responds a status 400 (bad request) and a null body response', (done) => {
+      request(app)
+        .post('/checkin')
+        .send({clientId: null})
+        .set('Accept', 'application/json')
+        .end((err, res) => {
+          expect('Content-Type', /json/)
+          expect(res.statusCode).to.equal(400);
+          expect(res.body).is.null;
+          done();
+        });
+    });
+  });
+
+
 });

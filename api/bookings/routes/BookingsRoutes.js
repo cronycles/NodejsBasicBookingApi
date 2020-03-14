@@ -9,6 +9,9 @@ export default class BookingsRoutes {
   defineBookingsRoutes = (app) => {
     app.route('/bookings')
       .post(this.bookingsController.createBooking);
+
+    app.route('/checkin')
+      .post(this.bookingsController.checkin);
   }
 
 }

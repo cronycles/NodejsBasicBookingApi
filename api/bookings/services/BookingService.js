@@ -1,6 +1,6 @@
 import CreateBookingResponseEntity from "./entities/CreateBookingResponseEntity";
 import SERVICE_ERRORS from "./entities/BookingServiceErrorsConstants";
-export default class BookingService  {
+export default class BookingService {
     #bookingRepository;
 
     constructor(bookingRepository) {
@@ -10,20 +10,17 @@ export default class BookingService  {
     createBooking = (createBookingRequestEntity) => {
         try {
             let outcome = null;
-            if (createBookingRequestEntity) {
-                if (!this.#isAValidClientId(createBookingRequestEntity.clientId)) {
-                    outcome = new CreateBookingResponseEntity(null, SERVICE_ERRORS.INVALID_CLIENT_ID);
-                }
-                else if (!this.#areValidDates(createBookingRequestEntity.dateFrom, createBookingRequestEntity.dateTo)) {
-                    outcome = new CreateBookingResponseEntity(null, SERVICE_ERRORS.INVALID_DATES);
-                }
-                else {
-                    outcome = this.#performBookingCreation(createBookingRequestEntity);
-                }
-            } else {
-                outcome = new CreateBookingResponseEntity(null, SERVICE_ERRORS.INVALID_INPUTS);
+            if (!createBookingRequestEntity) {
+                return new CreateBookingResponseEntity(null, SERVICE_ERRORS.INVALID_INPUTS);
             }
-            return outcome;
+            if (!this.#isAValidClientId(createBookingRequestEntity.clientId)) {
+                return new CreateBookingResponseEntity(null, SERVICE_ERRORS.INVALID_CLIENT_ID);
+            }
+            if (!this.#areValidDates(createBookingRequestEntity.dateFrom, createBookingRequestEntity.dateTo)) {
+                return new CreateBookingResponseEntity(null, SERVICE_ERRORS.INVALID_DATES);
+            }
+            return this.#performBookingCreation(createBookingRequestEntity);
+
         } catch (e) {
             console.log(e);
             return null;
@@ -56,13 +53,11 @@ export default class BookingService  {
         }
     }
     #performBookingCreation = (createBookingRequestEntity) => {
-        
         let outcome = null;
         let clientId = this.#bookingRepository.getClientById(createBookingRequestEntity.clientId);
-        if(!clientId) {
+        if (!clientId) {
             outcome = new CreateBookingResponseEntity(null, SERVICE_ERRORS.CLIENT_NOT_FOUND);
         }
-
         return outcome;
     }
 }

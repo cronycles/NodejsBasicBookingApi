@@ -6,16 +6,16 @@ export default class BookingService {
         try {
             let outcome = null;
             if (createBookingRequestEntity) {
-                if(!this.#isAValidClientId(createBookingRequestEntity.clientId)) {
+                if (!this.#isAValidClientId(createBookingRequestEntity.clientId)) {
                     outcome = new CreateBookingResponseEntity(null, SERVICE_ERRORS.INVALID_CLIENT_ID);
                 }
-                else if(!this.#areValidDates(createBookingRequestEntity.dateFrom, createBookingRequestEntity.dateTo)) {
+                else if (!this.#areValidDates(createBookingRequestEntity.dateFrom, createBookingRequestEntity.dateTo)) {
                     outcome = new CreateBookingResponseEntity(null, SERVICE_ERRORS.INVALID_DATES);
                 }
                 else {
 
                 }
-            }else {
+            } else {
                 outcome = new CreateBookingResponseEntity(null, SERVICE_ERRORS.INVALID_INPUTS);
             }
             return outcome;
@@ -33,18 +33,20 @@ export default class BookingService {
         try {
             let outcome = false;
             console.log(dateFromString);
-            if(dateFromString && dateToString) {
-                
+            if (dateFromString && dateToString) {
+
                 const dateFrom = Date.parse(dateFromString);
                 const dateTo = Date.parse(dateToString);
-                if(!isNaN(dateFrom) && !isNaN(dateTo)) {
-                    outcome = dateTo > dateFrom;
+                if (!isNaN(dateFrom) && !isNaN(dateTo)) {
+                    let todayStart = new Date().setHours(0, 0, 0, 0);
+                    outcome = dateFrom >= todayStart
+                        && dateTo > dateFrom
                 }
             }
-    
+
             return outcome;
 
-        }catch (e){
+        } catch (e) {
             console.log(e);
             return false;
         }

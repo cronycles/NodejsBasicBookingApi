@@ -25,9 +25,10 @@ export default class BookingsController {
     try {
       let outcome = false;
       if (booking != null
-        && booking.clientId != null
-        && booking.dateFrom != null
-        && booking.dateTo != null) {
+        && booking != {}
+        && booking.clientId
+        && booking.dateFrom
+        && booking.dateTo) {
           outcome = true;
         }
       return outcome;

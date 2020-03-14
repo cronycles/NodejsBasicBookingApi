@@ -1,4 +1,4 @@
-import app, { boookingsRoutes } from "../server.js";
+import app from "../server.js";
 import request from 'supertest';
 import sinon from 'sinon';
 import chai from 'chai';

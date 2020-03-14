@@ -201,10 +201,12 @@ describe('BookingsService Test Suite', () => {
 
     describe('checkin() with valid clientId', () => {
         let fakeBookingRepository;
+        let fakeControlAccessService;
         let bookingService;
         beforeEach(() => {
             fakeBookingRepository = new BookingRepository(fakeBookingRepository);
-            bookingService = new BookingService(fakeBookingRepository);
+            fakeControlAccessService = new ControlAccessService();
+            bookingService = new BookingService(fakeBookingRepository, fakeControlAccessService);
         });
 
         it('it always calls a BookingRepository.getClientTodayBooking', (done) => {

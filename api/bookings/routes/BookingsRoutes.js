@@ -1,20 +1,20 @@
 export default class BookingsRoutes {
-  bookingsController;
+  #bookingsController;
 
   constructor(bookingController, app) {
-    this.bookingsController = bookingController;
-    this.defineBookingsRoutes(app);
+    this.#bookingsController = bookingController;
+    this.defineRoutes(app);
   }
 
-  defineBookingsRoutes = (app) => {
+  defineRoutes = (app) => {
     app.route('/bookings')
-      .post(this.bookingsController.createBooking);
+      .post(this.#bookingsController.createBooking);
 
     app.route('/checkin')
-      .post(this.bookingsController.checkin);
+      .post(this.#bookingsController.checkin);
 
     app.route('/checkout')
-      .post(this.bookingsController.checkout);
+      .post(this.#bookingsController.checkout);
   }
 
 }

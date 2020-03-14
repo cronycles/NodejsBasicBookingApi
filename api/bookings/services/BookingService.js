@@ -141,6 +141,4 @@ export default class BookingService {
         }
         return new CheckoutResponseEntity(SERVICE_ERRORS.UNKNOWN); 
     }
-
-    
 }

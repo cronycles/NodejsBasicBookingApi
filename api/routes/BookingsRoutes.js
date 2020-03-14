@@ -1,17 +1,14 @@
-import BookingsController from '../controllers/BookingsController';
-
-
 export default class BookingsRoutes {
-  #bookingsController;
+  bookingsController;
 
-  constructor(app) {
-    this.#bookingsController = new BookingsController();
+  constructor(bookingController, app) {
+    this.bookingsController = bookingController;
     this.defineBookingsRoutes(app);
   }
 
   defineBookingsRoutes = (app) => {
     app.route('/bookings')
-      .post(this.#bookingsController.createABooking);
+      .post(this.bookingsController.createBooking);
   }
 
 }

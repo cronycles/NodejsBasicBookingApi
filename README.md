@@ -40,3 +40,8 @@ debería de salir un mensaje que dice: `running at port 3000`
 - si no hay un body con los inputs requeridos se envía un bad request, es el único caso, si no siempre 200
 - me espero unas fechas yyyy-mm-dd o yyyy/mm/dd
 - habría que considerar una transación para las reglas de negocio porqué podría ocurrir que mientras se comprueban los datos haya alguien que toque la bbdd
+- considero que el building no se llena nunca
+- considero que la reserva siempre sea de una sola persona
+- BookingRepository lo he dejado un poco abandonado, si no llevaría demasiado tiempo.
+- He suposto que los clientes son solo id y no entidades
+- he considerado que un cliente puede tener más de una reserva 

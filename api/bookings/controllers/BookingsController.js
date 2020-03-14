@@ -9,15 +9,21 @@ export default class BookingsController {
     this.#bookingService = bookingService;
   }
   createBooking = (req, res) => {
-    var booking = req.body;
-    if (this.#isAValidBookingRequest(booking)) {
-      let bookingServiceRequestEntity = new CreateBookingRequestEntity(booking.clientId, booking.dateFrom, booking.dateTo);
-      let bookingServiceResponseEntity = this.#bookingService.createBooking(bookingServiceRequestEntity);
-      const objectResponse = this.#createObjectResponseForCreatedBooking(bookingServiceResponseEntity);
-      res.status(objectResponse.status).json(objectResponse.data);
-    }
-    else {
-      res.status(400).json(null);
+    try {
+      var booking = req.body;
+      if (this.#isAValidBookingRequest(booking)) {
+        let bookingServiceRequestEntity = new CreateBookingRequestEntity(booking.clientId, booking.dateFrom, booking.dateTo);
+        let bookingServiceResponseEntity = this.#bookingService.createBooking(bookingServiceRequestEntity);
+
+        const objectResponse = this.#createObjectResponseForCreatedBooking(bookingServiceResponseEntity);
+        res.status(objectResponse.status).json(objectResponse.data);
+      }
+      else {
+        res.status(400).json(null);
+      }
+    } catch (e) {
+      console.log(e);
+      res.status(500).json(null);
     }
   };
 
@@ -29,8 +35,8 @@ export default class BookingsController {
         && booking.clientId
         && booking.dateFrom
         && booking.dateTo) {
-          outcome = true;
-        }
+        outcome = true;
+      }
       return outcome;
     } catch (e) {
       console.log(e);
@@ -90,10 +96,10 @@ export default class BookingsController {
           outcome.data.error.id = CLIENT_BOOKING_ERRORS.INVALID_DATES;
           outcome.data.error.message = "Invalid dates"
           break;
-          case SERVICE_BOOKING_ERRORS.BOOKINGS_FOUND:
-            outcome.data.error.id = CLIENT_BOOKING_ERRORS.BOOKINGS_FOUND;
-            outcome.data.error.message = "Invalid dates"
-            break;
+        case SERVICE_BOOKING_ERRORS.BOOKINGS_FOUND:
+          outcome.data.error.id = CLIENT_BOOKING_ERRORS.BOOKINGS_FOUND;
+          outcome.data.error.message = "Invalid dates"
+          break;
         default:
           outcome.data.error.id = CLIENT_BOOKING_ERRORS.UNKNOWN;
           outcome.data.error.message = "Unknown error"

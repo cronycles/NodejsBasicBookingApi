@@ -52,8 +52,8 @@ export default class BookingService {
             return false;
         }
     }
+
     #performBookingCreation = (createBookingRequestEntity) => {
-        let outcome = null;
         const clientId = this.#bookingRepository.getClientById(createBookingRequestEntity.clientId);
         if (!clientId) {
             return new CreateBookingResponseEntity(null, SERVICE_ERRORS.CLIENT_NOT_FOUND);
@@ -62,7 +62,16 @@ export default class BookingService {
         if(clientBookingsByDates && clientBookingsByDates.length > 0) {
             return new CreateBookingResponseEntity(null, SERVICE_ERRORS.BOOKINGS_FOUND);
         }
+        let createdBooking =  this.#bookingRepository.createBooking(
+            createBookingRequestEntity.clientId, 
+            createBookingRequestEntity.dateFrom,
+            createBookingRequestEntity.dateTo);
 
-        return this.#bookingRepository.createBooking(createBookingRequestEntity.clientId, createBookingRequestEntity.dateFrom,clientId.DateTo);
+        if(createdBooking) {
+            return new CreateBookingResponseEntity(createdBooking, null);
+        }
+        return new CreateBookingResponseEntity(null, SERVICE_ERRORS.UNKNOWN);
     }
+
+    
 }

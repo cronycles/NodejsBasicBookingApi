@@ -7,8 +7,8 @@ let assert = chai.assert;
 let should = chai.should();
 let expect = chai.expect;
 
-import BookingService from '../Services/BookingService'
-import BookingsController from "../api/controllers/BookingsController.js";
+import BookingService from '../api/bookings/services/BookingService'
+import BookingsController from "../api/bookings/controllers/BookingsController";
 
 const mockResponse = () => {
   const res = {};
@@ -22,6 +22,8 @@ const INVALID_REQUEST_BODY = [
   {},
   { clientId: null },
   { clientId: null, dateFrom: null },
+  { clientId: null, dateFrom: null, dateTo: null },
+  { clientId: "", dateFrom: "", dateTo: "" },
 ];
 
 describe('BookingsController Test Suite', () => {
@@ -66,7 +68,7 @@ describe('BookingsController Test Suite', () => {
   describe('POST /bookings with valid body', () => {
     let fakeBookingService = new BookingService();
     let bookingsController;
-    let req = { body: { clientId: null, dateFrom: null, dateTo: null } };
+    let req = { body: { clientId: 1, dateFrom: "something", dateTo: "something" } };
     beforeEach(() => {
       fakeBookingService = new BookingService();
       bookingsController = new BookingsController(fakeBookingService);

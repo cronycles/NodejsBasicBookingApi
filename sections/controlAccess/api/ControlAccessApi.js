@@ -3,7 +3,9 @@ import serviceConfiguration from '../../../serviceConfiguration'
 const https = require('https');
 
 export default class ControlAccessApi {
-    constructor() {
+    #api;
+    constructor(apiService) {
+        this.#api = apiService;
     }
 
     getAccessCode = () => {
@@ -21,51 +23,19 @@ export default class ControlAccessApi {
     }
 
     #callExternalService = () => {
-        this.#jsonCall((statusCode, result) => {
-            console.log(statusCode);
-            console.log(result);
-            // console.log(`onResult: (${statusCode})\n\n${JSON.stringify(result)}`);
-        });
+        let outcome = null;
+        this.#api.getCall(
+            serviceConfiguration.servicehost, 
+            serviceConfiguration.accessCodePath,
+            serviceConfiguration.isSecure, 
+            this.#getAccessCodeCallback);
+        return outcome;
     }
 
-    /**
-    * #jsonCall:  RESTful GET request returning JSON object(s)
-    * @param callback: callback to pass the results JSON object(s) back
-    */
-    #jsonCall = (callback) => {
-        console.log('rest::getJSON');
-        const options = {
-            host: 'jsonplaceholder.typicode.com',
-            port: 443,
-            path: '/posts',
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
+    #getAccessCodeCallback = (outputObj) => {
+            if(outputObj && outputObj.statusCode == 200 && outputObj.data) {
+                console.log(outputObj.data)
             }
-        };
-
-        const port = options.port == 443 ? https : http;
-
-        let output = '';
-
-        const req = port.request(options, (res) => {
-            res.setEncoding('utf8');
-
-            res.on('data', (chunk) => {
-                output += chunk;
-            });
-
-            res.on('end', () => {
-                let obj = JSON.parse(output);
-                callback(res.statusCode, obj);
-            });
-        });
-
-        req.on('error', (err) => {
-            // res.send('error: ' + err.message);
-        });
-
-        req.end();
-
     }
+
 }

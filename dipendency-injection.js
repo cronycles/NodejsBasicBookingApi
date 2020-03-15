@@ -8,11 +8,13 @@ import DomoticRepository from "./sections/domotic/repositories/DomoticRepository
 import DomoticService from "./sections/domotic/services/DomoticService";
 import DomoticController from "./sections/domotic/controllers/DomoticController";
 
+import ApiService from "./api/ApiService";
 import ControlAccessApi from "./sections/controlAccess/api/ControlAccessApi";
 import ControlAccessService from "./sections/controlAccess/services/ControlAccessService";
 
 module.exports.initializeClasses = (app) => {
-  const controlAccessApi = new ControlAccessApi();
+  const apiService = new ApiService();
+  const controlAccessApi = new ControlAccessApi(apiService);
   const controlAccessService = new ControlAccessService(controlAccessApi);
   
   const bookingRespository = new BookingRepository();

@@ -121,7 +121,7 @@ export default class BookingService {
         }
         checkinEntity.bookingId = clientBooking.id;
         const accessCode = this.#controlAccessService.getAccessCode();
-        if (false) {
+        if (accessCode) {
             checkinEntity.accessCode = accessCode;
             return this.#bookingRepository.checkin(checkinEntity);
         }

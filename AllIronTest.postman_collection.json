@@ -1,0 +1,788 @@
+{
+	"info": {
+		"_postman_id": "fc8d4b23-25a2-46e9-a6ea-3fdc3f7f504e",
+		"name": "AllIronTest",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "CreateBooking",
+			"item": [
+				{
+					"name": "Create a Booking without body",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/bookings/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"bookings",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a Booking with valid body but all null",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"clientId\": null,\n    \"dateFrom\": null,\n    \"dateTo\": null\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/bookings/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"bookings",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a Booking with invalid clientId",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"clientId\": \"-a\",\n    \"dateFrom\": \"2010-04-02\",\n    \"dateTo\": \"2011-04-02\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/bookings/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"bookings",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a Booking with invalid dates",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"clientId\": 1,\n    \"dateFrom\": \"asda\",\n    \"dateTo\": \"asdasdc\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/bookings/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"bookings",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a Booking with dateTo lower than from",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"clientId\": 1,\n    \"dateFrom\": \"2015-03-01\",\n    \"dateTo\": \"2010-03-01\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/bookings/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"bookings",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a Booking with everything ok",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"clientId\": 1,\n    \"dateFrom\": \"2030-03-01\",\n    \"dateTo\": \"2030-03-05\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/bookings/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"bookings",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "checkin",
+			"item": [
+				{
+					"name": "CheckIn without body",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:3000/checkin/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"checkin",
+								""
+							]
+						},
+						"description": "returns bad request with null body"
+					},
+					"response": []
+				},
+				{
+					"name": "CheckIn with null clientId",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"clientId\": null\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/checkin/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"checkin",
+								""
+							]
+						},
+						"description": "returns bad request with null body"
+					},
+					"response": []
+				},
+				{
+					"name": "CheckIn with invalid clientId",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"clientId\": \"-adaasd\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/checkin/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"checkin",
+								""
+							]
+						},
+						"description": "returns invalid clientid"
+					},
+					"response": []
+				},
+				{
+					"name": "CheckIn with valid clientId but not into db",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"clientId\": 100\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/checkin/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"checkin",
+								""
+							]
+						},
+						"description": "returns invalid clientid"
+					},
+					"response": []
+				},
+				{
+					"name": "CheckIn with clientId intodb but no booking into db",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"clientId\": 2\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/checkin/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"checkin",
+								""
+							]
+						},
+						"description": "returns checkin error"
+					},
+					"response": []
+				},
+				{
+					"name": "CheckIn with clientId intodb with booking",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"clientId\": 9\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/checkin/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"checkin",
+								""
+							]
+						},
+						"description": "returns access code"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "checkout",
+			"item": [
+				{
+					"name": "checkout without body",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:3000/checkout/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"checkout",
+								""
+							]
+						},
+						"description": "returns bad request with null body"
+					},
+					"response": []
+				},
+				{
+					"name": "checkout with null clientId",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"clientId\": null\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/checkout/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"checkout",
+								""
+							]
+						},
+						"description": "returns bad request with null body"
+					},
+					"response": []
+				},
+				{
+					"name": "checkout with invalid clientId",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"clientId\": \"-adaasd\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/checkout/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"checkout",
+								""
+							]
+						},
+						"description": "returns invalid clientid"
+					},
+					"response": []
+				},
+				{
+					"name": "checkout with valid clientId but not into db",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"clientId\": 100\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/checkout/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"checkout",
+								""
+							]
+						},
+						"description": "returns invalid clientid"
+					},
+					"response": []
+				},
+				{
+					"name": "checkout with clientId intodb but no booking into db",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"clientId\": 2\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/checkout/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"checkout",
+								""
+							]
+						},
+						"description": "returns checkout error"
+					},
+					"response": []
+				},
+				{
+					"name": "checkout with clientId intodb with booking",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"clientId\": 3\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/checkout/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"checkout",
+								""
+							]
+						},
+						"description": "returns 200 without errors"
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "3053ac1f-ac60-4457-8b18-46a05b6e9e7d",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "73af3611-307d-4c3d-934a-85d33f25863d",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "domotic",
+			"item": [
+				{
+					"name": "OpenDoor without body",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:3000/open-door/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"open-door",
+								"1"
+							]
+						},
+						"description": "returns bad request with null body"
+					},
+					"response": []
+				},
+				{
+					"name": "OpenDoor with invalid door",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:3000/open-door/-1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"open-door",
+								"-1"
+							]
+						},
+						"description": "returns bad request with null body"
+					},
+					"response": []
+				},
+				{
+					"name": "OpenDoor with null code",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"code\" : null\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/open-door/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"open-door",
+								"1"
+							]
+						},
+						"description": "returns bad request with null body"
+					},
+					"response": []
+				},
+				{
+					"name": "OpenDoor with valid door but not into db",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"code\" : 123456\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/open-door/100",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"open-door",
+								"100"
+							]
+						},
+						"description": "returns door does not exsists error"
+					},
+					"response": []
+				},
+				{
+					"name": "OpenDoor with valid code but not into db",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"code\" : 123456\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/open-door/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"open-door",
+								"1"
+							]
+						},
+						"description": "returns invalid code error"
+					},
+					"response": []
+				},
+				{
+					"name": "OpenDoor with every input ok",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"code\" : 114545\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/open-door/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"open-door",
+								"1"
+							]
+						},
+						"description": "returns 200 with empty body"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

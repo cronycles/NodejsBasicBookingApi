@@ -5,9 +5,9 @@ export default class ControlAccessService {
         this.#api = controAccessApi;
     }
 
-    getAccessCode = () => {
+    getAccessCode = async () => {
         try {
-            return this.#api.getAccessCode();
+            return await this.#api.getAccessCode();
         } catch (e) {
             console.log(e);
             return null;

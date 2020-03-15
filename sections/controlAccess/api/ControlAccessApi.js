@@ -8,13 +8,14 @@ export default class ControlAccessApi {
         this.#api = apiService;
     }
 
-    getAccessCode = () => {
+    getAccessCode = async () => {
         try {
             if (serviceConfiguration.doesMockService) {
-                return Math.floor(100000 + Math.random() * 900000);
+                let code = Math.floor(100000 + Math.random() * 900000);
+                return `mocked${code}`;
             }
             else {
-                return this.#callExternalService();
+                return await this.#callExternalService();
             }
         } catch (e) {
             console.log(e);
@@ -22,29 +23,23 @@ export default class ControlAccessApi {
         }
     }
 
-    #callExternalService = () => {
+    #callExternalService = async () => {
         let outcome = null;
-        this.#api.getCall(
-            serviceConfiguration.servicehost,
-            serviceConfiguration.servicePort,
-            serviceConfiguration.accessCodePath,
-            serviceConfiguration.isSecure,
-            this.#getAccessCodeCallback);
-        return outcome;
-    }
+        try {
+            let outputObj = await this.#api.getCall(
+                serviceConfiguration.servicehost,
+                serviceConfiguration.servicePort,
+                serviceConfiguration.accessCodePath,
+                serviceConfiguration.isSecure);
+            if (outputObj && outputObj.data) {
+                outcome = outputObj.data.code;
+            }
+            return outcome;
 
-    #getAccessCodeCallback = (outputObj) => {
-        let outcome = null;
-        if(outputObj) {
-            if (outputObj.error) {
-                console.error(outputObj.error)
-            }
-            else {
-                console.log(outputObj.data)
-            }
+        } catch (e) {
+            console.error(e);
+            return null;
         }
-
-        return outcome;
     }
 
 }

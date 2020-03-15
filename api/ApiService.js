@@ -9,8 +9,8 @@ export default class ApiService {
     * getCall:  RESTful GET request returning JSON object(s)
     * @param callback: callback to pass the results JSON object(s) back
     */
-    getCall = (host, port, path, isSecure, callback) => {
-       
+    getCall = async (host, port, path, isSecure) => {
+
         const options = {
             host: host,
             path: path,
@@ -20,34 +20,32 @@ export default class ApiService {
                 'Content-Type': 'application/json'
             }
         };
-        
+
         const protocol = isSecure ? https : http;
 
         let output = '';
-        const req = protocol.request(options, (res) => {
-            
-            res.setEncoding('utf8');
 
-            res.on('data', (chunk) => {
-                output += chunk;
-            });
+        return new Promise((resolve, reject) => {
+            const req = protocol.request(options, (res) => {
 
-            res.on('end', () => {
-                let obj = JSON.parse(output);
-                callback({
-                    status: res.statusCode, 
-                    data : obj
+                res.setEncoding('utf8');
+
+                res.on('data', (chunk) => {
+                    output += chunk;
+                });
+
+                res.on('end', () => {
+                    let obj = JSON.parse(output);
+                    resolve({
+                        status: res.statusCode,
+                        data: obj
+                    });
                 });
             });
-        });
 
-        req.on('error', (err) => {
-            callback({
-                error: err
-            });
+            req.on('error',reject);
+            req.write("")
+            req.end();
         });
-        req.write("")
-        req.end();
-
     }
 }

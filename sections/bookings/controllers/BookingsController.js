@@ -31,12 +31,12 @@ export default class BookingsController {
     }
   };
 
-  checkin = (req, res) => {
+  checkin = async (req, res) => {
     try {
       var checkin = req.body;
       if (this.#isAValidCheckinRequest(checkin)) {
         let checkinRequestEntity = new CheckinEntity(checkin.clientId);
-        let checkInResponseEntity = this.#bookingService.checkin(checkinRequestEntity);
+        let checkInResponseEntity = await this.#bookingService.checkin(checkinRequestEntity);
         const objectResponse = this.#createObjectResponseForCheckin(checkInResponseEntity);
         res.status(objectResponse.status).json(objectResponse.data);
       }

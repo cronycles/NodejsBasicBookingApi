@@ -1,5 +1,5 @@
 export default {
-  "doesMockService": false,
+  "doesMockService": true,
   "isSecure" : false,
   "servicehost": "localhost",
   "servicePort": 3001,

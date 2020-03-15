@@ -29,7 +29,7 @@ export default class BookingService {
             return null;
         }
     }
-    checkin = (checkinEntity) => {
+    checkin = async (checkinEntity) => {
         try {
             if (!checkinEntity) {
                 return this.#createCheckinErrorResponseEntity(SERVICE_ERRORS.INVALID_INPUTS);
@@ -38,7 +38,7 @@ export default class BookingService {
                 return this.#createCheckinErrorResponseEntity(SERVICE_ERRORS.INVALID_CLIENT_ID);
             }
             
-            return this.#performCheckin(checkinEntity);
+            return await this.#performCheckin(checkinEntity);
 
         } catch (e) {
             console.log(e);
@@ -113,7 +113,7 @@ export default class BookingService {
         return this.#bookingRepository.createBooking(bookingEntity);
     };
 
-    #performCheckin = (checkinEntity) => {
+    #performCheckin = async (checkinEntity) => {
         const clientId = this.#bookingRepository.getClientById(checkinEntity.clientId);
         if (!clientId) {
             
@@ -124,7 +124,7 @@ export default class BookingService {
             return this.#createCheckinErrorResponseEntity(SERVICE_ERRORS.INVALID_CHECKIN);
         }
         checkinEntity.bookingId = clientBooking.id;
-        const accessCode = this.#controlAccessService.getAccessCode();
+        const accessCode = await this.#controlAccessService.getAccessCode();
         if (accessCode) {
             checkinEntity.accessCode = accessCode;
             return this.#bookingRepository.checkin(checkinEntity);

@@ -12,7 +12,7 @@ let expect = chai.expect;
 import DomoticRepository from "../api/domotic/repositories/DomoticRepository";
 import DomoticService from '../api/domotic/services/DomoticService'
 import DOMOTIC_SERVICE_CONSTANTS from '../api/domotic/services/entities/DomoticServiceErrorsConstants'
-import DomoticResponseEntity from "../api/domotic/services/entities/DomoticResponseEntity";
+import DomoticDoorEntity from "../api/domotic/services/entities/DomoticDoorEntity";
 
 describe('DomoticService Test Suite', () => {
     const INVALID_INPUTS = [
@@ -30,7 +30,7 @@ describe('DomoticService Test Suite', () => {
                 const domoticResponseEntity = service.openDoor(inputEntity);
                 expect(domoticResponseEntity).not.null;
                 expect(domoticResponseEntity).not.null;
-                expect(domoticResponseEntity).to.be.an.instanceOf(DomoticResponseEntity);
+                expect(domoticResponseEntity).to.be.an.instanceOf(DomoticDoorEntity);
                 expect(domoticResponseEntity.error).is.equal(DOMOTIC_SERVICE_CONSTANTS.INVALID_INPUTS);
                 done();
             });
@@ -47,8 +47,8 @@ describe('DomoticService Test Suite', () => {
 
         it('it always calls repository.isAccessCodeValid() function ', (done) => {
             sinon.stub(repository, 'isAccessCodeValid').resolves();
-
-            service.openDoor(123456);
+            let domoticDoorEntity = new DomoticDoorEntity(1, 123456);
+            service.openDoor(domoticDoorEntity);
             sinon.assert.calledOnce(repository.isAccessCodeValid);
             done();
         });
@@ -64,10 +64,10 @@ describe('DomoticService Test Suite', () => {
 
         it('it return an entity with no errors ', (done) => {
             sinon.stub(repository, 'isAccessCodeValid').returns(true);
-
-            let domoticResponseEntity = service.openDoor(123456);
+            let domoticDoorEntity = new DomoticDoorEntity(1, 123456);
+            let domoticResponseEntity = service.openDoor(domoticDoorEntity);
             expect(domoticResponseEntity).not.null;
-            expect(domoticResponseEntity).to.be.an.instanceOf(DomoticResponseEntity);
+            expect(domoticResponseEntity).to.be.an.instanceOf(DomoticDoorEntity);
             expect(domoticResponseEntity.error).not.exist;
             done();
         });

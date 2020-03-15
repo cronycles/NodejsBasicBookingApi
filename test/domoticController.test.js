@@ -28,7 +28,7 @@ describe('DomoticController Test Suite', () => {
     describe(`POST /open-door with invalid body (${body})`, () => {
       it('responds a status 400 (bad request) and a null body response', (done) => {
         request(app)
-          .post('/open-door')
+          .post('/open-door/1')
           .send(body)
           .set('Accept', 'application/json')
           .end((err, res) => {
@@ -63,7 +63,7 @@ describe('DomoticController Test Suite', () => {
   describe('openDoor() with valid body', () => {
     let fakeDomoticService = new DomoticService();
     let domoticController;
-    let req = { body: { code: 123456 } };
+    let req = { params: { id: 1 }, body: { code: 123456 } };
     beforeEach(() => {
       fakeDomoticService = new DomoticService();
       domoticController = new DomoticController(fakeDomoticService);

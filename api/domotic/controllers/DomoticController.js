@@ -1,5 +1,6 @@
 import CLIENT_DOMOTIC_ERRORS from './sharedEntities/DomoticErrorsConstants';
 import SERVICE_DOMOTIC_ERRORS from '../services/entities/DomoticServiceErrorsConstants';
+import DomoticDoorEntity from '../services/entities/DomoticDoorEntity';
 
 export default class DomoticController {
   #domoticService;
@@ -7,15 +8,14 @@ export default class DomoticController {
   constructor(domoticService) {
     this.#domoticService = domoticService;
   }
+
   openDoor = (req, res) => {
     try {
-      var request = req.body;
-      
-      if (this.#isAValidRequest(request)) {
-        
-        let domoticServiceResponseEntity = this.#domoticService.openDoor(request.code);
+      if (this.#isAValidRequest(req)) {
+        let requestEntity = new DomoticDoorEntity(req.params.id, req.body.code);
+        let responseEntity = this.#domoticService.openDoor(requestEntity);
 
-        const objectResponse = this.#createObjectResponseFromServiceEntity(domoticServiceResponseEntity);
+        const objectResponse = this.#createObjectResponseFromServiceEntity(responseEntity);
         res.status(objectResponse.status).json(objectResponse.data);
       }
       else {
@@ -31,10 +31,15 @@ export default class DomoticController {
   #isAValidRequest(request) {
     try {
       let outcome = false;
+
       if (request != null
         && request != {}
-        && request.code
-        && request.code > 0) {
+        && request.body != {}
+        && request.params != null
+        && request.params.id != null
+        && request.params.id > 0
+        && request.body.code != null
+        && request.body.code > 0) {
         outcome = true;
       }
       return outcome;
@@ -44,13 +49,13 @@ export default class DomoticController {
     }
   }
 
-  #createObjectResponseFromServiceEntity(domoticServiceResponseEntity) {
+  #createObjectResponseFromServiceEntity(domoticEntity) {
     try {
       let outcome = {}
 
-      if (domoticServiceResponseEntity) {
-        if (domoticServiceResponseEntity.error) {
-          outcome = this.#createErrorResponseFromServiceError(domoticServiceResponseEntity.error);
+      if (domoticEntity) {
+        if (domoticEntity.error) {
+          outcome = this.#createErrorResponseFromServiceError(domoticEntity.error);
         }
         else {
           outcome = {
@@ -84,6 +89,10 @@ export default class DomoticController {
         case SERVICE_DOMOTIC_ERRORS.INVALID_INPUTS:
           outcome.status = 400
           break;
+          case SERVICE_DOMOTIC_ERRORS.INVALID_DOOR_ID:
+            outcome.data.error.id = CLIENT_DOMOTIC_ERRORS.INVALID_DOOR_ID;
+            outcome.data.error.message = "door does not exists" 
+            break;
         case SERVICE_DOMOTIC_ERRORS.INVALID_CODE:
           outcome.data.error.id = CLIENT_DOMOTIC_ERRORS.INVALID_CODE;
           outcome.data.error.message = "Invalid code"

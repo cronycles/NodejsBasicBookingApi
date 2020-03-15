@@ -1,4 +1,4 @@
-import DomoticResponseEntity from "./entities/DomoticResponseEntity";
+import DomoticDoorEntity from "./entities/DomoticDoorEntity";
 import SERVICE_ERRORS from "./entities/DomoticServiceErrorsConstants";
 export default class DomoticService {
     #domoticRepository;
@@ -7,24 +7,45 @@ export default class DomoticService {
         this.#domoticRepository = domoticRepository;
     }
 
-    openDoor = (accessCode) => {
+    openDoor = (domoticDoorEntity) => {
         try {
-            if (!accessCode) {
-                return new DomoticResponseEntity(SERVICE_ERRORS.INVALID_INPUTS);
+            if (!domoticDoorEntity) {
+                return this.#createDomoticDoorErrorResponseEntity(SERVICE_ERRORS.INVALID_INPUTS);
             }
-            return this.#performDoorOpening(accessCode);
+            if (!this.#isAValidDoorId(domoticDoorEntity.doorId)) {
+                return this.#createDomoticDoorErrorResponseEntity(SERVICE_ERRORS.INVALID_INPUTS);
+            }
+            if (!this.#isAValidCode(domoticDoorEntity.code)) {
+                return this.#createDomoticDoorErrorResponseEntity(SERVICE_ERRORS.INVALID_CODE);
+            }
+            return this.#performDoorOpening(domoticDoorEntity);
 
         } catch (e) {
             console.log(e);
             return null;
         }
+    };
+
+    #isAValidDoorId = (doorId) => {
+        return doorId && doorId > 0
     }
 
-    #performDoorOpening = (accessCode) => {
-        if (!this.#domoticRepository.isAccessCodeValid(accessCode)) {
-            return new DomoticResponseEntity(SERVICE_ERRORS.INVALID_CODE);
-        }
-        //unlock door
-        return new DomoticResponseEntity();
+    #isAValidCode = (code) => {
+        return code && code > 0
     }
+
+    #createDomoticDoorErrorResponseEntity = (errorConstant) => {
+        return new DomoticDoorEntity(null, null, errorConstant);
+    };
+
+    #performDoorOpening = (domoticDoorEntity) => {
+        if (!this.#domoticRepository.getDoorById(domoticDoorEntity.doorId)) {
+            return this.#createDomoticDoorErrorResponseEntity(SERVICE_ERRORS.INVALID_DOOR_ID);
+        }
+        if (!this.#domoticRepository.isAccessCodeValid(domoticDoorEntity.code)) {
+            return this.#createDomoticDoorErrorResponseEntity(SERVICE_ERRORS.INVALID_CODE);
+        }
+        //unlock door!!!
+        return new DomoticDoorEntity();
+    };
 }

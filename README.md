@@ -50,3 +50,4 @@ debería de salir un mensaje que dice: `running at port 3000`
 - separacion de errores 
 - logica de negocio no muy optima pero separada
 - db no optimo 
+- lad db doors se suponen que son solo ids

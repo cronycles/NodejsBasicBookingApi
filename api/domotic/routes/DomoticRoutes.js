@@ -7,7 +7,7 @@ export default class DomoticRoutes {
   }
 
   defineRoutes = (app) => {
-    app.route('/open-door')
+    app.route('/open-door/:id')
       .post(this.#domoticController.openDoor);
   }
 

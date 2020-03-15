@@ -6,8 +6,8 @@ export default class BookingRepository {
     constructor() {
         this.#clients = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         this.#validBookings = [
-            { client: 1, dateFrom: new Date("2050-01-04"), dateTo: new Date("2050-01-05") },
-            { client: 5, dateFrom: new Date("2050-05-04"), dateTo: new Date("2050-05-10") }
+            {id: 1, client: 1, dateFrom: new Date("2050-01-04"), dateTo: new Date("2050-01-05") },
+            {id: 2, client: 5, dateFrom: new Date("2050-05-04"), dateTo: new Date("2050-05-10") }
         ];
     }
 
@@ -70,10 +70,9 @@ export default class BookingRepository {
         return outcome;
     }
 
-    createBooking = (clientId, dateFrom, dateTo) => {
-        const booking = {client: clientId, dateFrom: dateFrom, dateTo: dateTo};
-        this.#validBookings.push(booking);
-        return booking;
+    createBooking = (bookingEntity) => {
+        //booking persist
+        return bookingEntity;
     }
 
     checkout = (clientId, bookingId) => {

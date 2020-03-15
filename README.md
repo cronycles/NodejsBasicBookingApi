@@ -46,3 +46,4 @@ debería de salir un mensaje que dice: `running at port 3000`
 - He suposto que los clientes son solo id y no entidades
 - he considerado que un cliente puede tener más de una reserva 
 - un access code está ligado a la reserva y se cancela con ella, pero está en una tabla a parte
+- la logica de negocio por ahora está en el servicio, yo la movería

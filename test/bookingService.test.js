@@ -13,7 +13,7 @@ import ControlAccessService from "../api/bookings/services/ControlAccessService"
 import BookingRepository from "../api/bookings/repositories/BookingRepository";
 import BookingService from '../api/bookings/services/BookingService'
 import BOOKING_SERVICE_CONSTANTS from '../api/bookings/services/entities/BookingServiceErrorsConstants'
-import CreateBookingResponseEntity from "../api/bookings/services/entities/CreateBookingResponseEntity";
+import BookingEntity from "../api/bookings/services/entities/BookingEntity";
 
 describe('BookingsService Test Suite', () => {
     const INVALID_INPUTS = [
@@ -28,12 +28,12 @@ describe('BookingsService Test Suite', () => {
             });
 
             it('always returns an invalid inputs error', (done) => {
-                const bookingServiceCreateBookingOutcome = bookingService.createBooking(inputEntity);
-                expect(bookingServiceCreateBookingOutcome).not.null;
-                expect(bookingServiceCreateBookingOutcome).not.null;
-                expect(bookingServiceCreateBookingOutcome).to.be.an.instanceOf(CreateBookingResponseEntity);
-                expect(bookingServiceCreateBookingOutcome.booking).is.null;
-                expect(bookingServiceCreateBookingOutcome.error).is.equal(BOOKING_SERVICE_CONSTANTS.INVALID_INPUTS);
+                const bookingEntity = bookingService.createBooking(inputEntity);
+                expect(bookingEntity).not.null;
+                expect(bookingEntity).not.null;
+                expect(bookingEntity).to.be.an.instanceOf(BookingEntity);
+                expect(bookingEntity.booking).not.exist;
+                expect(bookingEntity.error).is.equal(BOOKING_SERVICE_CONSTANTS.INVALID_INPUTS);
                 done();
             });
         });
@@ -54,12 +54,12 @@ describe('BookingsService Test Suite', () => {
             });
 
             it('always returns an invalid client id error', (done) => {
-                const bookingServiceCreateBookingOutcome = bookingService.createBooking(inputEntity);
-                expect(bookingServiceCreateBookingOutcome).not.null;
-                expect(bookingServiceCreateBookingOutcome).not.null;
-                expect(bookingServiceCreateBookingOutcome).to.be.an.instanceOf(CreateBookingResponseEntity);
-                expect(bookingServiceCreateBookingOutcome.booking).is.null;
-                expect(bookingServiceCreateBookingOutcome.error).is.equal(BOOKING_SERVICE_CONSTANTS.INVALID_CLIENT_ID);
+                const bookingEntity = bookingService.createBooking(inputEntity);
+                expect(bookingEntity).not.null;
+                expect(bookingEntity).not.null;
+                expect(bookingEntity).to.be.an.instanceOf(BookingEntity);
+                expect(bookingEntity.booking).not.exist;
+                expect(bookingEntity.error).is.equal(BOOKING_SERVICE_CONSTANTS.INVALID_CLIENT_ID);
                 done();
             });
         });
@@ -85,12 +85,12 @@ describe('BookingsService Test Suite', () => {
             });
 
             it('always returns an invalid dates error', (done) => {
-                const bookingServiceCreateBookingOutcome = bookingService.createBooking(inputEntity);
-                expect(bookingServiceCreateBookingOutcome).not.null;
-                expect(bookingServiceCreateBookingOutcome).not.null;
-                expect(bookingServiceCreateBookingOutcome).to.be.an.instanceOf(CreateBookingResponseEntity);
-                expect(bookingServiceCreateBookingOutcome.booking).is.null;
-                expect(bookingServiceCreateBookingOutcome.error).is.equal(BOOKING_SERVICE_CONSTANTS.INVALID_DATES);
+                const bookingEntity = bookingService.createBooking(inputEntity);
+                expect(bookingEntity).not.null;
+                expect(bookingEntity).not.null;
+                expect(bookingEntity).to.be.an.instanceOf(BookingEntity);
+                expect(bookingEntity.booking).not.exist;
+                expect(bookingEntity.error).is.equal(BOOKING_SERVICE_CONSTANTS.INVALID_DATES);
                 done();
             });
         });
@@ -108,8 +108,8 @@ describe('BookingsService Test Suite', () => {
             const inputEntity = { clientId: 1, dateFrom: "3050-01-01", dateTo: "3050-01-02" };
             sinon.stub(fakeBookingRepository, 'getClientById').returns(null);
 
-            const bookingServiceCreateBookingOutcome = bookingService.createBooking(inputEntity);
-            expect(bookingServiceCreateBookingOutcome).to.be.an.instanceOf(CreateBookingResponseEntity);
+            const bookingEntity = bookingService.createBooking(inputEntity);
+            expect(bookingEntity).to.be.an.instanceOf(BookingEntity);
             sinon.assert.calledOnce(fakeBookingRepository.getClientById);
             done();
         });
@@ -127,11 +127,11 @@ describe('BookingsService Test Suite', () => {
             const inputEntity = { clientId: 1, dateFrom: "3050-01-01", dateTo: "3050-01-02" };
             sinon.stub(fakeBookingRepository, 'getClientById').returns(null);
 
-            const bookingServiceCreateBookingOutcome = bookingService.createBooking(inputEntity);
-            expect(bookingServiceCreateBookingOutcome).not.null;
-            expect(bookingServiceCreateBookingOutcome).not.null;
-            expect(bookingServiceCreateBookingOutcome.booking).is.null;
-            expect(bookingServiceCreateBookingOutcome.error).is.equal(BOOKING_SERVICE_CONSTANTS.CLIENT_NOT_FOUND);
+            const bookingEntity = bookingService.createBooking(inputEntity);
+            expect(bookingEntity).not.null;
+            expect(bookingEntity).not.null;
+            expect(bookingEntity.booking).not.exist;
+            expect(bookingEntity.error).is.equal(BOOKING_SERVICE_CONSTANTS.CLIENT_NOT_FOUND);
             done();
         });
     });
@@ -149,11 +149,11 @@ describe('BookingsService Test Suite', () => {
             sinon.stub(fakeBookingRepository, 'getClientById').returns(1);
             sinon.stub(fakeBookingRepository, 'getClientBookingsByDates').returns(["booking"]);
 
-            const bookingServiceCreateBookingOutcome = bookingService.createBooking(inputEntity);
-            expect(bookingServiceCreateBookingOutcome).not.null;
-            expect(bookingServiceCreateBookingOutcome).not.null;
-            expect(bookingServiceCreateBookingOutcome.booking).is.null;
-            expect(bookingServiceCreateBookingOutcome.error).is.equal(BOOKING_SERVICE_CONSTANTS.BOOKINGS_FOUND);
+            const bookingEntity = bookingService.createBooking(inputEntity);
+            expect(bookingEntity).not.null;
+            expect(bookingEntity).not.null;
+            expect(bookingEntity.booking).not.exist;
+            expect(bookingEntity.error).is.equal(BOOKING_SERVICE_CONSTANTS.BOOKINGS_FOUND);
             done();
         });
     });

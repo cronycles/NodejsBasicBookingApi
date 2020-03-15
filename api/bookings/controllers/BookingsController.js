@@ -1,6 +1,6 @@
 import CLIENT_BOOKING_ERRORS from './sharedEntities/BookingErrorsConstants';
 import SERVICE_BOOKING_ERRORS from '../services/entities/BookingServiceErrorsConstants';
-import CreateBookingRequestEntity from '../services/entities/CreateBookingRequestEntity';
+import BookingEntity from '../services/entities/BookingEntity';
 
 export default class BookingsController {
   #bookingService;
@@ -8,14 +8,16 @@ export default class BookingsController {
   constructor(bookingService) {
     this.#bookingService = bookingService;
   }
+
   createBooking = (req, res) => {
     try {
       var booking = req.body;
       if (this.#isAValidBookingRequest(booking)) {
-        let bookingServiceRequestEntity = new CreateBookingRequestEntity(booking.clientId, booking.dateFrom, booking.dateTo);
+        let bookingServiceRequestEntity = new BookingEntity(booking.clientId, booking.dateFrom, booking.dateTo);
         let bookingServiceResponseEntity = this.#bookingService.createBooking(bookingServiceRequestEntity);
 
-        const objectResponse = this.#createObjectResponseForCreatedBooking(bookingServiceResponseEntity);
+        const objectResponse = this.#createObjectResponseForBooking(bookingServiceResponseEntity);
+        
         res.status(objectResponse.status).json(objectResponse.data);
       }
       else {
@@ -110,21 +112,24 @@ export default class BookingsController {
     }
   }
 
-  #createObjectResponseForCreatedBooking(bookingServiceResponseEntity) {
+  #createObjectResponseForBooking(bookingEntity) {
     try {
       let outcome = {}
 
-      if (bookingServiceResponseEntity) {
-        if (bookingServiceResponseEntity.error && bookingServiceResponseEntity.booking == null) {
-          outcome = this.#createErrorResponseFromServiceError(bookingServiceResponseEntity.error);
+      if (bookingEntity) {
+        if (bookingEntity.error) {
+          
+          outcome = this.#createErrorResponseFromServiceError(bookingEntity.error);
         }
         else {
-          outcome = {
-            status: 200,
-            data: {
-              booking: bookingServiceResponseEntity.booking
-            }
-          }
+          outcome = this.#createResponseOkDataObject(
+            {
+              booking: {
+                clientId: bookingEntity.clientId,
+                dateFrom: bookingEntity.dateFrom,
+                dateTo: bookingEntity.dateTo
+              }
+            });
         }
       }
       return outcome;
@@ -146,12 +151,7 @@ export default class BookingsController {
           outcome = this.#createErrorResponseFromServiceError(checkinResponseEntity.error);
         }
         else {
-          outcome = {
-            status: 200,
-            data: {
-              accessCode: checkinResponseEntity.accessCode
-            }
-          }
+          outcome = this.#createResponseOkDataObject(checkinResponseEntity.accessCode);
         }
       }
       return outcome;
@@ -173,10 +173,7 @@ export default class BookingsController {
           outcome = this.#createErrorResponseFromServiceError(checkoutResponseEntity.error);
         }
         else {
-          outcome = {
-            status: 200,
-            data: {}
-          }
+          outcome = this.#createResponseOkDataObject({})
         }
       }
       return outcome;
@@ -186,6 +183,13 @@ export default class BookingsController {
       return {
         status: 500
       }
+    }
+  }
+
+  #createResponseOkDataObject(outputDataObject) {
+    return {
+      status: 200,
+      data: outputDataObject
     }
   }
 

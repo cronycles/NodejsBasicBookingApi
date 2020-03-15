@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "fc8d4b23-25a2-46e9-a6ea-3fdc3f7f504e",
-		"name": "CroBasicNodejsApi",
+		"name": "CroBasicNodejsBookingApi",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -24,7 +24,8 @@
 								"bookings",
 								""
 							]
-						}
+						},
+						"description": "returns bad request with null body"
 					},
 					"response": []
 				},
@@ -55,7 +56,8 @@
 								"bookings",
 								""
 							]
-						}
+						},
+						"description": "returns bad request with null body"
 					},
 					"response": []
 				},
@@ -86,7 +88,8 @@
 								"bookings",
 								""
 							]
-						}
+						},
+						"description": "returns 200 with invalid client id error"
 					},
 					"response": []
 				},
@@ -117,7 +120,8 @@
 								"bookings",
 								""
 							]
-						}
+						},
+						"description": "returns 200 with invalid dates error"
 					},
 					"response": []
 				},
@@ -148,7 +152,8 @@
 								"bookings",
 								""
 							]
-						}
+						},
+						"description": "returns 200 with invalid dates error"
 					},
 					"response": []
 				},
@@ -179,7 +184,8 @@
 								"bookings",
 								""
 							]
-						}
+						},
+						"description": "returns 200 with booking response"
 					},
 					"response": []
 				}

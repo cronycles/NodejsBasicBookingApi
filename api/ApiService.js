@@ -6,10 +6,10 @@ export default class ApiService {
     }
 
     /**
-    * getCall:  RESTful GET request returning JSON object(s)
+    * postCall:  RESTful POST request returning JSON object(s)
     * @param callback: callback to pass the results JSON object(s) back
     */
-    getCall = async (host, port, path, isSecure) => {
+    postCall = async (host, port, path, isSecure) => {
 
         const options = {
             host: host,

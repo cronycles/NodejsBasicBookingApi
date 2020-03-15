@@ -26,7 +26,7 @@ export default class ControlAccessApi {
     #callExternalService = async () => {
         let outcome = null;
         try {
-            let outputObj = await this.#api.getCall(
+            let outputObj = await this.#api.postCall(
                 serviceConfiguration.servicehost,
                 serviceConfiguration.servicePort,
                 serviceConfiguration.accessCodePath,

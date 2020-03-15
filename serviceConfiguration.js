@@ -1,6 +1,7 @@
 export default {
   "doesMockService": false,
-  "isSecure" : true,
-  "servicehost": "jsonplaceholder.typicode.com",
-  "accessCodePath": "/posts"
+  "isSecure" : false,
+  "servicehost": "localhost",
+  "servicePort": 3001,
+  "accessCodePath": "/api/access_code"
 }

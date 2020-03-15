@@ -25,17 +25,26 @@ export default class ControlAccessApi {
     #callExternalService = () => {
         let outcome = null;
         this.#api.getCall(
-            serviceConfiguration.servicehost, 
+            serviceConfiguration.servicehost,
+            serviceConfiguration.servicePort,
             serviceConfiguration.accessCodePath,
-            serviceConfiguration.isSecure, 
+            serviceConfiguration.isSecure,
             this.#getAccessCodeCallback);
         return outcome;
     }
 
     #getAccessCodeCallback = (outputObj) => {
-            if(outputObj && outputObj.statusCode == 200 && outputObj.data) {
+        let outcome = null;
+        if(outputObj) {
+            if (outputObj.error) {
+                console.error(outputObj.error)
+            }
+            else {
                 console.log(outputObj.data)
             }
+        }
+
+        return outcome;
     }
 
 }

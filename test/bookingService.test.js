@@ -9,7 +9,7 @@ let assert = chai.assert;
 let should = chai.should();
 let expect = chai.expect;
 
-import ControlAccessService from "../sections/bookings/services/ControlAccessService";
+import ControlAccessService from "../sections/controlAccess/services/ControlAccessService";
 import BookingRepository from "../sections/bookings/repositories/BookingRepository";
 import BookingService from '../sections/bookings/services/BookingService'
 import BOOKING_SERVICE_CONSTANTS from '../sections/bookings/services/entities/BookingServiceErrorsConstants'

@@ -51,3 +51,4 @@ debería de salir un mensaje que dice: `running at port 3000`
 - logica de negocio no muy optima pero separada
 - db no optimo 
 - lad db doors se suponen que son solo ids
+- para el access code he creado un service sin llamar directamente el api porque igual se piensa hacer algo

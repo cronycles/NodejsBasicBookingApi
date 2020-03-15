@@ -1,12 +1,13 @@
 export default class ControlAccessService {
+    #api;
 
-    constructor() {
-
+    constructor(controAccessApi) {
+        this.#api = controAccessApi;
     }
 
     getAccessCode = () => {
         try {
-            return Math.floor(100000 + Math.random() * 900000);
+            return this.#api.getAccessCode();
         } catch (e) {
             console.log(e);
             return null;

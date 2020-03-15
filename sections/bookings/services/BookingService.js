@@ -116,7 +116,7 @@ export default class BookingService {
     #performCheckin = async (checkinEntity) => {
         const clientId = this.#bookingRepository.getClientById(checkinEntity.clientId);
         if (!clientId) {
-            
+            console.log("cacasdsad");
             return this.#createCheckinErrorResponseEntity(SERVICE_ERRORS.CLIENT_NOT_FOUND);
         }
         const clientBooking = this.#bookingRepository.getClientTodayBooking(checkinEntity.clientId);

@@ -14,6 +14,7 @@ import BookingRepository from "../sections/bookings/repositories/BookingReposito
 import BookingService from '../sections/bookings/services/BookingService'
 import BOOKING_SERVICE_CONSTANTS from '../sections/bookings/services/entities/BookingServiceErrorsConstants'
 import BookingEntity from "../sections/bookings/services/entities/BookingEntity";
+import ControlAccessApi from "../sections/controlAccess/api/ControlAccessApi.js";
 
 describe('BookingsService Test Suite', () => {
     const INVALID_INPUTS = [
@@ -179,23 +180,27 @@ describe('BookingsService Test Suite', () => {
     });
 
     describe('checkin() with unknown clientId', () => {
+        let fakeControlAccessApi;
         let fakeBookingRepository;
         let bookingService;
         beforeEach(() => {
+            fakeControlAccessApi = new ControlAccessApi();
             fakeBookingRepository = new BookingRepository(fakeBookingRepository);
-            bookingService = new BookingService(fakeBookingRepository);
+            bookingService = new BookingService(fakeBookingRepository, fakeControlAccessApi);
         });
 
         it('it always returns a client not found error', (done) => {
             const inputEntity = { clientId: 1 };
             sinon.stub(fakeBookingRepository, 'getClientById').returns(null);
         
-            const bookingServiceCheckinOutcome = bookingService.checkin(inputEntity);
-            expect(bookingServiceCheckinOutcome).not.null;
-            expect(bookingServiceCheckinOutcome).not.null;
-            expect(bookingServiceCheckinOutcome.accessCode).is.null;
-            expect(bookingServiceCheckinOutcome.error).is.equal(BOOKING_SERVICE_CONSTANTS.CLIENT_NOT_FOUND);
-            done();
+            bookingService.checkin(inputEntity)
+            .then((bookingServiceCheckinOutcome) => {
+                expect(bookingServiceCheckinOutcome).not.null;
+                expect(bookingServiceCheckinOutcome).not.null;
+                expect(bookingServiceCheckinOutcome.code).not.exist;
+                expect(bookingServiceCheckinOutcome.error).is.equal(BOOKING_SERVICE_CONSTANTS.CLIENT_NOT_FOUND);
+                done();
+            });
         });
     });
 
@@ -213,10 +218,14 @@ describe('BookingsService Test Suite', () => {
             const inputEntity = { clientId: 1 };
             sinon.stub(fakeBookingRepository, 'getClientById').returns(1);
             sinon.stub(fakeBookingRepository, 'getClientTodayBooking').returns({booking: "booking"});
+            sinon.stub(fakeControlAccessService, 'getAccessCode').returns(123456);
+
         
-            bookingService.checkin(inputEntity);
-            sinon.assert.calledOnce(fakeBookingRepository.getClientTodayBooking);
-            done();
+            bookingService.checkin(inputEntity)
+            .then(()=>{
+                sinon.assert.calledOnce(fakeBookingRepository.getClientTodayBooking);
+                done();
+            });
         });
     });
 
@@ -236,9 +245,12 @@ describe('BookingsService Test Suite', () => {
             sinon.stub(fakeBookingRepository, 'getClientTodayBooking').returns({booking: "booking"});
             sinon.stub(fakeControlAccessService, 'getAccessCode').resolves();
         
-            bookingService.checkin(inputEntity);
-            sinon.assert.calledOnce(fakeControlAccessService.getAccessCode);
-            done();
+            bookingService.checkin(inputEntity)
+            .then(()=>{
+                sinon.assert.calledOnce(fakeControlAccessService.getAccessCode);
+                done();
+            });
+           
         });
     });
 

@@ -84,8 +84,9 @@ export default class BookingRepository {
         return checkinEntity;
     }
 
-    checkout = (clientId, bookingId) => {
+    checkout = (checkoutEntity) => {
         //checkout performing
+        // mark checkout as done and disassociate all access codes
         return true;
     }
 

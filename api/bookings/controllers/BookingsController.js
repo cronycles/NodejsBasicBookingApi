@@ -2,6 +2,7 @@ import CLIENT_BOOKING_ERRORS from './sharedEntities/BookingErrorsConstants';
 import SERVICE_BOOKING_ERRORS from '../services/entities/BookingServiceErrorsConstants';
 import BookingEntity from '../services/entities/BookingEntity';
 import CheckinEntity from '../services/entities/CheckinEntity';
+import CheckoutEntity from '../services/entities/CheckoutEntity';
 
 export default class BookingsController {
   #bookingService;
@@ -52,9 +53,10 @@ export default class BookingsController {
     try {
       var checkout = req.body;
       if (this.#isAValidCheckoutRequest(checkout)) {
-        let checkInResponseEntity = this.#bookingService.checkout(checkout.clientId);
+        let requestEntity = new CheckoutEntity(checkout.clientId);
+        let responseEntity = this.#bookingService.checkout(requestEntity);
 
-        const objectResponse = this.#createObjectResponseForCheckout(checkInResponseEntity);
+        const objectResponse = this.#createObjectResponseForCheckout(responseEntity);
         res.status(objectResponse.status).json(objectResponse.data);
       }
       else {
@@ -66,7 +68,7 @@ export default class BookingsController {
     }
   };
 
-  #isAValidCheckinRequest(checkin) {
+  #isAValidCheckinRequest = (checkin) => {
     try {
       let outcome = false;
       if (checkin != null
@@ -81,7 +83,7 @@ export default class BookingsController {
     }
   }
 
-  #isAValidCheckoutRequest(checkout) {
+  #isAValidCheckoutRequest = (checkout) => {
     try {
       let outcome = false;
       if (checkout != null
@@ -96,7 +98,7 @@ export default class BookingsController {
     }
   }
 
-  #isAValidBookingRequest(booking) {
+  #isAValidBookingRequest = (booking) => {
     try {
       let outcome = false;
       if (booking != null
@@ -113,7 +115,7 @@ export default class BookingsController {
     }
   }
 
-  #createObjectResponseForBooking(bookingEntity) {
+  #createObjectResponseForBooking = (bookingEntity) => {
     try {
       let outcome = {}
 
@@ -143,7 +145,7 @@ export default class BookingsController {
     }
   }
 
-  #createObjectResponseForCheckin(checkinEntity) {
+  #createObjectResponseForCheckin = (checkinEntity) => {
     try {
       let outcome = {}
       if (checkinEntity) {
@@ -164,7 +166,7 @@ export default class BookingsController {
     }
   }
 
-  #createObjectResponseForCheckout(checkoutResponseEntity) {
+  #createObjectResponseForCheckout = (checkoutResponseEntity) => {
     try {
       let outcome = {}
 
@@ -186,14 +188,14 @@ export default class BookingsController {
     }
   }
 
-  #createResponseOkDataObject(outputDataObject) {
+  #createResponseOkDataObject = (outputDataObject) => {
     return {
       status: 200,
       data: outputDataObject
     }
   }
 
-  #createErrorResponseFromServiceError(serviceError) {
+  #createErrorResponseFromServiceError = (serviceError) => {
     let outcome = {
       status: 200,
       data: {
@@ -204,7 +206,6 @@ export default class BookingsController {
       }
     }
     if (serviceError) {
-
       switch (serviceError) {
         case SERVICE_BOOKING_ERRORS.INVALID_INPUTS:
           outcome.status = 400
@@ -228,7 +229,7 @@ export default class BookingsController {
           break;
         case SERVICE_BOOKING_ERRORS.INVALID_CHECKOUT:
           outcome.data.error.id = CLIENT_BOOKING_ERRORS.INVALID_CHECKOUT;
-          outcome.data.error.message = "checkin error"
+          outcome.data.error.message = "checkout error"
           break;
         default:
           outcome.data.error.id = CLIENT_BOOKING_ERRORS.UNKNOWN;

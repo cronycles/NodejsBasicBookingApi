@@ -1,6 +1,6 @@
 import BookingEntity from "./entities/BookingEntity";
 import CheckinEntity from "./entities/CheckinEntity";
-import CheckoutResponseEntity from "./entities/CheckoutResponseEntity";
+import CheckoutEntity from "./entities/CheckoutEntity";
 import SERVICE_ERRORS from "./entities/BookingServiceErrorsConstants";
 export default class BookingService {
     #bookingRepository;
@@ -46,15 +46,15 @@ export default class BookingService {
         }
     }
 
-    checkout = (checkoutRequestEntity) => {
+    checkout = (checkoutEntity) => {
         try {
-            if (!checkoutRequestEntity) {
-                return new CheckoutResponseEntity(SERVICE_ERRORS.INVALID_INPUTS);
+            if (!checkoutEntity) {
+                return this.#createCheckoutErrorResponseEntity(SERVICE_ERRORS.INVALID_INPUTS);
             }
-            if (!this.#isAValidClientId(checkoutRequestEntity.clientId)) {
-                return new CheckoutResponseEntity(SERVICE_ERRORS.INVALID_CLIENT_ID);
+            if (!this.#isAValidClientId(checkoutEntity.clientId)) {
+                return this.#createCheckoutErrorResponseEntity(SERVICE_ERRORS.INVALID_CLIENT_ID);
             }
-            return this.#performCheckout(checkoutRequestEntity);
+            return this.#performCheckout(checkoutEntity);
 
         } catch (e) {
             console.log(e);
@@ -96,6 +96,10 @@ export default class BookingService {
         return new CheckinEntity(null, null, null, errorConstant);
     };
 
+    #createCheckoutErrorResponseEntity = (errorConstant) => {
+        return new CheckoutEntity(null, null, errorConstant);
+    };
+
     #performBookingCreation = (bookingEntity) => {
         const clientId = this.#bookingRepository.getClientById(bookingEntity.clientId);
         if (!clientId) {
@@ -128,21 +132,17 @@ export default class BookingService {
         return this.#createCheckinErrorResponseEntity(SERVICE_ERRORS.UNKNOWN);
     };
 
-    #performCheckout = (checkoutRequestEntity) => {
-        const clientId = this.#bookingRepository.getClientById(checkoutRequestEntity.clientId);
+    #performCheckout = (checkoutEntity) => {
+        const clientId = this.#bookingRepository.getClientById(checkoutEntity.clientId);
         if (!clientId) {
-            return new CheckoutResponseEntity(SERVICE_ERRORS.CLIENT_NOT_FOUND);
+            return this.#createCheckoutErrorResponseEntity(SERVICE_ERRORS.CLIENT_NOT_FOUND);
         }
-
-        const clientBooking = this.#bookingRepository.getClientCheckedInBooking(checkoutRequestEntity.clientId);
+        const clientBooking = this.#bookingRepository.getClientCheckedInBooking(checkoutEntity.clientId);
         if (!clientBooking) {
-            return new CheckoutResponseEntity(SERVICE_ERRORS.INVALID_CHECKIN);
+            return this.#createCheckoutErrorResponseEntity(SERVICE_ERRORS.INVALID_CHECKOUT);
         }
+        checkoutEntity.bookingId = clientBooking.id;
 
-        const isCheckedOut = this.#bookingRepository.checkout(clientId, clientBooking.id);
-        if (isCheckedOut) {
-            return new CheckoutResponseEntity();
-        }
-        return new CheckoutResponseEntity(SERVICE_ERRORS.UNKNOWN);
+        return this.#bookingRepository.checkout(checkoutEntity);
     };
 }

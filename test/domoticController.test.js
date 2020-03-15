@@ -7,8 +7,8 @@ let assert = chai.assert;
 let should = chai.should();
 let expect = chai.expect;
 
-import DomoticService from '../api/domotic/services/DomoticService'
-import DomoticController from "../api/domotic/controllers/DomoticController";
+import DomoticService from '../sections/domotic/services/DomoticService'
+import DomoticController from "../sections/domotic/controllers/DomoticController";
 
 const mockResponse = () => {
   const res = {};

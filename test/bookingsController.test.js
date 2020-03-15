@@ -7,8 +7,8 @@ let assert = chai.assert;
 let should = chai.should();
 let expect = chai.expect;
 
-import BookingService from '../api/bookings/services/BookingService'
-import BookingsController from "../api/bookings/controllers/BookingsController";
+import BookingService from '../sections/bookings/services/BookingService'
+import BookingsController from "../sections/bookings/controllers/BookingsController";
 
 const mockResponse = () => {
   const res = {};

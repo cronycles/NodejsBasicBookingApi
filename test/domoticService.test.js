@@ -9,10 +9,10 @@ let assert = chai.assert;
 let should = chai.should();
 let expect = chai.expect;
 
-import DomoticRepository from "../api/domotic/repositories/DomoticRepository";
-import DomoticService from '../api/domotic/services/DomoticService'
-import DOMOTIC_SERVICE_CONSTANTS from '../api/domotic/services/entities/DomoticServiceErrorsConstants'
-import DomoticDoorEntity from "../api/domotic/services/entities/DomoticDoorEntity";
+import DomoticRepository from "../sections/domotic/repositories/DomoticRepository";
+import DomoticService from '../sections/domotic/services/DomoticService'
+import DOMOTIC_SERVICE_CONSTANTS from '../sections/domotic/services/entities/DomoticServiceErrorsConstants'
+import DomoticDoorEntity from "../sections/domotic/services/entities/DomoticDoorEntity";
 
 describe('DomoticService Test Suite', () => {
     const INVALID_INPUTS = [

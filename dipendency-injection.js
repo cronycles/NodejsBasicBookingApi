@@ -1,13 +1,13 @@
-import BookingsRoutes from "./api/bookings/routes/BookingsRoutes";
-import BookingRepository from "./api/bookings/repositories/BookingRepository";
-import ControlAccessService from "./api/bookings/services/ControlAccessService";
-import BookingService from "./api/bookings/services/BookingService";
-import BookingsController from "./api/bookings/controllers/BookingsController";
+import BookingsRoutes from "./sections/bookings/routes/BookingsRoutes";
+import BookingRepository from "./sections/bookings/repositories/BookingRepository";
+import ControlAccessService from "./sections/bookings/services/ControlAccessService";
+import BookingService from "./sections/bookings/services/BookingService";
+import BookingsController from "./sections/bookings/controllers/BookingsController";
 
-import DomoticRoutes from "./api/domotic/routes/DomoticRoutes";
-import DomoticRepository from "./api/domotic/repositories/DomoticRepository";
-import DomoticService from "./api/domotic/services/DomoticService";
-import DomoticController from "./api/domotic/controllers/DomoticController";
+import DomoticRoutes from "./sections/domotic/routes/DomoticRoutes";
+import DomoticRepository from "./sections/domotic/repositories/DomoticRepository";
+import DomoticService from "./sections/domotic/services/DomoticService";
+import DomoticController from "./sections/domotic/controllers/DomoticController";
 
 module.exports.initializeClasses = (app) => {
   const bookingRespository = new BookingRepository();

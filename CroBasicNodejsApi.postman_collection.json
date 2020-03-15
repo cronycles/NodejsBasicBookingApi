@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "fc8d4b23-25a2-46e9-a6ea-3fdc3f7f504e",
-		"name": "AllIronTest",
+		"name": "CroBasicNodejsApi",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [

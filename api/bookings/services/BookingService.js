@@ -1,5 +1,5 @@
 import BookingEntity from "./entities/BookingEntity";
-import CheckinResponseEntity from "./entities/CheckinResponseEntity";
+import CheckinEntity from "./entities/CheckinEntity";
 import CheckoutResponseEntity from "./entities/CheckoutResponseEntity";
 import SERVICE_ERRORS from "./entities/BookingServiceErrorsConstants";
 export default class BookingService {
@@ -16,7 +16,7 @@ export default class BookingService {
             if (!bookingEntity) {
                 return this.#createBookingErrorResponseEntity(SERVICE_ERRORS.INVALID_INPUTS);
             }
-            if (!this.#isAValidClientId(bookingEntity.clientId)) {
+            if (!this.#isAValidClientId(bookingEntity.clientId)) {   
                 return this.#createBookingErrorResponseEntity(SERVICE_ERRORS.INVALID_CLIENT_ID);
             }
             if (!this.#areValidDates(bookingEntity.dateFrom, bookingEntity.dateTo)) {
@@ -29,16 +29,16 @@ export default class BookingService {
             return null;
         }
     }
-    checkin = (checkinRequestEntity) => {
+    checkin = (checkinEntity) => {
         try {
-            if (!checkinRequestEntity) {
-                return new CheckinResponseEntity(null, SERVICE_ERRORS.INVALID_INPUTS);
+            if (!checkinEntity) {
+                return this.#createCheckinErrorResponseEntity(SERVICE_ERRORS.INVALID_INPUTS);
             }
-            if (!this.#isAValidClientId(checkinRequestEntity.clientId)) {
-                return new CheckinResponseEntity(null, SERVICE_ERRORS.INVALID_CLIENT_ID);
+            if (!this.#isAValidClientId(checkinEntity.clientId)) {
+                return this.#createCheckinErrorResponseEntity(SERVICE_ERRORS.INVALID_CLIENT_ID);
             }
-
-            return this.#performCheckin(checkinRequestEntity);
+            
+            return this.#performCheckin(checkinEntity);
 
         } catch (e) {
             console.log(e);
@@ -92,6 +92,10 @@ export default class BookingService {
         return new BookingEntity(null, null, null, errorConstant);
     };
 
+    #createCheckinErrorResponseEntity = (errorConstant) => {
+        return new CheckinEntity(null, null, null, errorConstant);
+    };
+
     #performBookingCreation = (bookingEntity) => {
         const clientId = this.#bookingRepository.getClientById(bookingEntity.clientId);
         if (!clientId) {
@@ -105,20 +109,23 @@ export default class BookingService {
         return this.#bookingRepository.createBooking(bookingEntity);
     };
 
-    #performCheckin = (checkinRequestEntity) => {
-        const clientId = this.#bookingRepository.getClientById(checkinRequestEntity.clientId);
+    #performCheckin = (checkinEntity) => {
+        const clientId = this.#bookingRepository.getClientById(checkinEntity.clientId);
         if (!clientId) {
-            return new CheckinResponseEntity(null, SERVICE_ERRORS.CLIENT_NOT_FOUND);
+            
+            return this.#createCheckinErrorResponseEntity(SERVICE_ERRORS.CLIENT_NOT_FOUND);
         }
-        const clientBooking = this.#bookingRepository.getClientTodayBooking(checkinRequestEntity.clientId);
+        const clientBooking = this.#bookingRepository.getClientTodayBooking(checkinEntity.clientId);
         if (!clientBooking) {
-            return new CheckinResponseEntity(null, SERVICE_ERRORS.INVALID_CHECKIN);
+            return this.#createCheckinErrorResponseEntity(SERVICE_ERRORS.INVALID_CHECKIN);
         }
+        checkinEntity.bookingId = clientBooking.id;
         const accessCode = this.#controlAccessService.getAccessCode();
-        if (accessCode) {
-            return new CheckinResponseEntity(accessCode, null);
+        if (false) {
+            checkinEntity.accessCode = accessCode;
+            return this.#bookingRepository.checkin(checkinEntity);
         }
-        return new CheckinResponseEntity(null, SERVICE_ERRORS.UNKNOWN);
+        return this.#createCheckinErrorResponseEntity(SERVICE_ERRORS.UNKNOWN);
     };
 
     #performCheckout = (checkoutRequestEntity) => {

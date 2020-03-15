@@ -6,8 +6,10 @@ export default class BookingRepository {
     constructor() {
         this.#clients = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         this.#validBookings = [
-            {id: 1, client: 1, dateFrom: new Date("2050-01-04"), dateTo: new Date("2050-01-05") },
-            {id: 2, client: 5, dateFrom: new Date("2050-05-04"), dateTo: new Date("2050-05-10") }
+            { id: 1, client: 1, dateFrom: new Date("2050-01-04"), dateTo: new Date("2050-01-05"), checkin: false },
+            { id: 2, client: 5, dateFrom: new Date("2050-05-04"), dateTo: new Date("2050-05-10"), checkin: false },
+            { id: 3, client: 3, dateFrom: new Date("2030-10-01"), dateTo: new Date("2030-10-07"), checkin: true },
+            { id: 4, client: 9, dateFrom: new Date().setHours(0, 0, 0, 0), dateTo: new Date("2030-10-07"), checkin: false }
         ];
     }
 
@@ -73,6 +75,13 @@ export default class BookingRepository {
     createBooking = (bookingEntity) => {
         //booking persist
         return bookingEntity;
+    }
+
+    checkin = (checkinEntity) => {
+        //checkin performing
+        // setting checkin boolean to tro
+        // associating access code to booking
+        return checkinEntity;
     }
 
     checkout = (clientId, bookingId) => {

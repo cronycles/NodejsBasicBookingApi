@@ -1,6 +1,7 @@
 import CLIENT_BOOKING_ERRORS from './sharedEntities/BookingErrorsConstants';
 import SERVICE_BOOKING_ERRORS from '../services/entities/BookingServiceErrorsConstants';
 import BookingEntity from '../services/entities/BookingEntity';
+import CheckinEntity from '../services/entities/CheckinEntity';
 
 export default class BookingsController {
   #bookingService;
@@ -33,8 +34,8 @@ export default class BookingsController {
     try {
       var checkin = req.body;
       if (this.#isAValidCheckinRequest(checkin)) {
-        let checkInResponseEntity = this.#bookingService.checkin(checkin.clientId);
-
+        let checkinRequestEntity = new CheckinEntity(checkin.clientId);
+        let checkInResponseEntity = this.#bookingService.checkin(checkinRequestEntity);
         const objectResponse = this.#createObjectResponseForCheckin(checkInResponseEntity);
         res.status(objectResponse.status).json(objectResponse.data);
       }
@@ -117,7 +118,7 @@ export default class BookingsController {
       let outcome = {}
 
       if (bookingEntity) {
-        if (bookingEntity.error) {
+        if (bookingEntity.error != null) {
           
           outcome = this.#createErrorResponseFromServiceError(bookingEntity.error);
         }
@@ -142,16 +143,15 @@ export default class BookingsController {
     }
   }
 
-  #createObjectResponseForCheckin(checkinResponseEntity) {
+  #createObjectResponseForCheckin(checkinEntity) {
     try {
       let outcome = {}
-
-      if (checkinResponseEntity) {
-        if (checkinResponseEntity.error && checkinResponseEntity.accessCode == null) {
-          outcome = this.#createErrorResponseFromServiceError(checkinResponseEntity.error);
+      if (checkinEntity) {
+        if (checkinEntity.error != null && checkinEntity.accessCode == null) {
+          outcome = this.#createErrorResponseFromServiceError(checkinEntity.error);
         }
         else {
-          outcome = this.#createResponseOkDataObject(checkinResponseEntity.accessCode);
+          outcome = this.#createResponseOkDataObject(checkinEntity.accessCode);
         }
       }
       return outcome;
@@ -169,7 +169,7 @@ export default class BookingsController {
       let outcome = {}
 
       if (checkoutResponseEntity) {
-        if (checkoutResponseEntity.error) {
+        if (checkoutResponseEntity.error != null) {
           outcome = this.#createErrorResponseFromServiceError(checkoutResponseEntity.error);
         }
         else {
